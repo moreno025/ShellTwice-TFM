@@ -26,7 +26,7 @@ Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios
 
 2. Navega al directorio del proyecto:
     ```sh
-    cd nombre_repositorio
+    cd ShellTwice-TFM
     ```
 
 3. Instala las dependencias:
@@ -37,3 +37,38 @@ Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios
     ```sh
     npm start
     ```
+
+
+## Uso
+
+1. Regístrate o inicia sesión.
+2. Publica un anuncio rellenando el formulario con los detalles del artículo.
+3. Clasifica el artículo en la categoría adecuada.
+4. (Opcional) Añade hashtags relevantes para facilitar la búsqueda.
+5. Busca y filtra anuncios de otros usuarios por categoría, rango de precios o texto.
+6. Valora a otros usuarios según tu experiencia.
+
+
+## Estructura del Proyecto
+
+📦 ShellTwice/
+🖥️ cliente/
+   ├── 📁 public/                     # Archivos estáticos
+   └── 📁 src/                        # Archivos fuente
+       └── 📄 App.js                  # Componente principal de la aplicación
+
+⚙️ servidor/
+   ├── 📁 controladores/              # Manipuladores de peticiones
+   ├── 📁 modelos/                    # Modelos de base de datos
+   ├── 📁 rutas/                      # Rutas de API
+   └── 📄 server.js                   # Punto de entrada
+
+🗃️ base_de_datos/
+   └── 📄 schema.sql                  # Esquema de base de datos
+
+📝 **README.md                        # Documentación del proyecto
+📄 .gitignore                         # Archivo ignorar de Git
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT LICENSE. Consulta el archivo `LICENSE` para más detalles.
