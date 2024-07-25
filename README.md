@@ -52,22 +52,25 @@ Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios
 ## Estructura del Proyecto
 
 📦 ShellTwice/
+
 🖥️ cliente/
-    ├── 📁 public/                     # Archivos estáticos
-        └── 📁 src/                        # Archivos fuente
-        └── 📄 App.js                  # Componente principal de la aplicación
+   ├── 📁 public/                     # Archivos estáticos
+   └── 📁 src/                        # Archivos fuente
+       ├── 📁 componentes/            # Componentes React
+       └── 📄 App.js                  # Componente principal de la aplicación
 
 ⚙️ servidor/
    ├── 📁 controladores/              # Manipuladores de peticiones
    ├── 📁 modelos/                    # Modelos de base de datos
    ├── 📁 rutas/                      # Rutas de API
+   ├── 📁 utilidades/                 # Funciones de utilidad
    └── 📄 server.js                   # Punto de entrada
 
 🗃️ base_de_datos/
    └── 📄 schema.sql                  # Esquema de base de datos
 
 📝 **README.md                        # Documentación del proyecto
-📄 .gitignore                         # Archivo ignorar de Git
+📄 .gitignore                         # Archivo de ignorar de Git
 
 ## Licencia
 
