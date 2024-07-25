@@ -51,6 +51,7 @@ Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios
 
 ## Estructura del Proyecto
 
+```
 📦 ShellTwice/
 
 🖥️ cliente/
@@ -71,6 +72,7 @@ Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios
 
 📝 **README.md                        # Documentación del proyecto
 📄 .gitignore                         # Archivo de ignorar de Git
+```
 
 ## Licencia
 
