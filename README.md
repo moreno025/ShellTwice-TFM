@@ -53,11 +53,9 @@ Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios
 
 📦 ShellTwice/
 🖥️ cliente/
-
-   ├── 📁 public/                     # Archivos estáticos
-   
-   └── 📁 src/                        # Archivos fuente
-       └── 📄 App.js                  # Componente principal de la aplicación
+    ├── 📁 public/                     # Archivos estáticos
+        └── 📁 src/                        # Archivos fuente
+        └── 📄 App.js                  # Componente principal de la aplicación
 
 ⚙️ servidor/
    ├── 📁 controladores/              # Manipuladores de peticiones
