@@ -29,7 +29,7 @@ Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios
     cd shelltwicetfm
     ```
 
-3. Instala las dependencias:
+3. Instala las dependencias tanto en client como en server:
     ```sh
     npm install
     ```
