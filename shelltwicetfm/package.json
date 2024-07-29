@@ -9,5 +9,10 @@
   },
   "devDependencies": {
     "concurrently": "^7.0.0"
-  }
+  },
+  "main": "index.js",
+  "keywords": [],
+  "author": "moreno025",
+  "license": "MIT",
+  "description": "Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios pueden poner anuncios de los artículos que desean vender."
 }
