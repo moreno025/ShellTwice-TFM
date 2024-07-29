@@ -26,7 +26,7 @@ Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios
 
 2. Navega al directorio del proyecto:
     ```sh
-    cd ShellTwice-TFM
+    cd shelltwicetfm
     ```
 
 3. Instala las dependencias:
@@ -66,9 +66,6 @@ Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios
    ├── 📁 rutas/                      # Rutas de API
    ├── 📁 utilidades/                 # Funciones de utilidad
    └── 📄 server.js                   # Punto de entrada
-
-🗃️ base_de_datos/
-   └── 📄 schema.sql                  # Esquema de base de datos
 
 📝 **README.md                        # Documentación del proyecto
 📄 .gitignore                         # Archivo de ignorar de Git
