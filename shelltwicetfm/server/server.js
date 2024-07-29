@@ -17,10 +17,10 @@ app.use(express.json());
 conectarDb();
 
 // Routes APIs
-const userRoutes = require('./routes/User.routes.js');
+//const userRoutes = require('./routes/User.routes.js');
 
 // Rutas controladores
-app.use('/users', userRoutes);
+//app.use('/users', userRoutes);
 
 // Conexion server
 app.listen(port, () => {
