@@ -1,26 +1,45 @@
-import React from 'react';
 import styles from '../styles/SignUp.module.css';
-import logo from '../assets/logoShellTwice.png';
+import logo from '../assets/logoEditado.png';
 
 const SignUp = () => {
-    return(
-        <div className = { styles.sign_up_container }>
-            <div className = { styles.left_panel }>
-                <img src={ logo } alt="ShellTwice Logo" className="logo" />
-                <h2>SHELLTWICE</h2>
-                <p>EST. 2024</p>
-                <p>¿Ya tienes una cuenta? <a href="/login">Login</a></p>
-                <button className = { styles.sign_in_button }>Sign In</button>
-            </div>
-            <div className = { styles.right_panel }>
-                <h2>Create Account</h2>
-                <form>
-                    <input type = 'text' placeholder='Name' required />
-                    <input type = 'password' placeholder='Username' required />
-                    <input type = 'email' placeholder='Email' required />
-                    <input type = 'text' placeholder='Password' required />
-                    <button type='submit'>Sign Up</button>
-                </form>
+    return (
+        <div className = {`container-fluid px-4 text-center ${styles.container}`}>
+            <div className={`row gx-5`}>
+                <div className={`col`}>
+                    <div className= {`p-3`}>
+                        <div className= {`card ${styles.card_left}`}>
+                            <img src={logo} className={`card-img-top ${styles.logo}`} alt="Logo ShellTwice" />
+                            <div className={`card-body`}>
+                                <p className={`card-text`}>¿Ya tienes cuenta? Haz <strong><a href=''>Login</a></strong></p>
+                                <a href="#" className= {`btn btn-primary mt-3 ${styles.boton_signup}`}>Login</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className={`col`}>
+                    <div className={`p-3`}>
+                        <div className= {`card ${styles.card_right}`}>
+                        <h2>Create Account</h2>
+                            <div className={`form-floating mb-3 mt-4`}>
+                                <input type="text" className={`form-control`} placeholder="Nombre" />
+                                <label>Nombre</label>
+                            </div>
+                            <div className="form-floating mb-3">
+                                <input type="text" className={`form-control`} placeholder="Username" />
+                                <label>Username</label>
+                            </div>
+                            <div className="form-floating mb-3">
+                                <input type="email" className={`form-control`} placeholder="Email" />
+                                <label>Email</label>
+                            </div>
+                            <div className="form-floating mb-3">
+                                <input type="password" className={`form-control`} placeholder="Password" />
+                                <label>Password</label>
+                            </div>
+                            <button type="button" className={`btn btn-primary mt-3 ${styles.boton_signup}`}>Sign Up</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
