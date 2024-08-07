@@ -58,6 +58,7 @@ Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios
    ├── 📁 public/                     # Archivos estáticos
    └── 📁 src/                        # Archivos fuente
        ├── 📁 componentes/            # Componentes React
+       ├── 📁 styles/                 # Estilos de los componentes
        └── 📄 App.js                  # Componente principal de la aplicación
 
 ⚙️ servidor/
