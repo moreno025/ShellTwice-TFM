@@ -23,6 +23,7 @@ const articuloSchema = new Schema({
     estado: { type: String, enum: ["Disponible", "No Disponible"], default: "Disponible" },
     categoria: { type: Schema.Types.ObjectId, ref: Categoria, required: true },
     usuario_id: { type: Schema.Types.ObjectId, ref: users, required: true }
+    // array de mensajes 
 });
 
 const Articulo = mongoose.model('Articulo', articuloSchema);

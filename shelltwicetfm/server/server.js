@@ -6,7 +6,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const conectarDb = require('./database/database.js');
 
-const port = process.env.port || 3000;
+const port = process.env.port || 3001;
 dotenv.config();
 
 // Middleware cors, express y JSON

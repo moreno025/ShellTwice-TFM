@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const categoriaSchema = new Schema({
     titulo: { type: String, required: true, unique: true },
-    numero_anuncios: { type: Number, default: 0 }
+    numero_anuncios: { type: Number, default: 0 } // count sobre el número de consultas
 }); 
 
 const Categoria = mongoose.model('Categoria', categoriaSchema);
