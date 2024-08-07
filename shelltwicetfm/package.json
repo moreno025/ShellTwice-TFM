@@ -14,5 +14,8 @@
   "keywords": [],
   "author": "moreno025",
   "license": "MIT",
-  "description": "Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios pueden poner anuncios de los artículos que desean vender."
+  "description": "Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios pueden poner anuncios de los artículos que desean vender.",
+  "dependencies": {
+    "body-parser": "^1.20.2"
+  }
 }
