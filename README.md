@@ -21,7 +21,7 @@ Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios
 
 1. Clona el repositorio:
     ```sh
-    git clone https://github.com/tu_usuario/ShellTwice-TFM.git
+    git clone https://github.com/moreno025/ShellTwice-TFM.git
     ```
 
 2. Navega al directorio del proyecto:
@@ -58,6 +58,7 @@ Este proyecto consiste en el desarrollo de una plataforma en la que los usuarios
    ├── 📁 public/                     # Archivos estáticos
    └── 📁 src/                        # Archivos fuente
        ├── 📁 componentes/            # Componentes React
+       ├── 📁 styles/                 # Estilos de los componentes
        └── 📄 App.js                  # Componente principal de la aplicación
 
 ⚙️ servidor/
