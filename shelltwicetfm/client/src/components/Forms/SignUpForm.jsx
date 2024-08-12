@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import styles from '../../styles/SignUp.module.css';
 
 const SignUpForm = () => {
@@ -11,6 +13,8 @@ const SignUpForm = () => {
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const { login } = useAuth(); // Obtén la función login del contexto
+    const navigate = useNavigate(); // Obtén la función navigate para redirigir
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -26,15 +30,21 @@ const SignUpForm = () => {
             const response = await axios.post('http://localhost:3001/users/signup', formData);
 
             if (response.status === 200) {
-                alert('Usuario creado con éxito');
+                const { token } = response.data;
+                localStorage.setItem('token', token);
+                login(token);
+
                 setFormData({
                     name: '',
                     username: '',
                     email: '',
                     password: '',
                 });
+
+                navigate('/');
+                
             } else {
-                alert('Error al crear el usuario');
+                setError(error.response?.data?.message || 'Error desconocido');
             }
         } catch (error) {
             console.error('Error en la petición:', error);
