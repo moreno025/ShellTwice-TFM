@@ -5,6 +5,11 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const conectarDb = require('./database/database.js');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+// APIs
+const usersRoutes = require('./routes/users.routes.js');
 
 const port = process.env.port || 3001;
 dotenv.config();
@@ -20,11 +25,8 @@ app.use(bodyParser.json());
 // Conexion a la base de datos
 conectarDb();
 
-// Routes APIs
-//const userRoutes = require('./routes/User.routes.js');
-
 // Rutas controladores
-//app.use('/users', userRoutes);
+app.use('/users', usersRoutes);
 
 // Conexion server
 app.listen(port, () => {
