@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { Modal, Button } from 'react-bootstrap';
 import styles from '../../styles/SignUp.module.css';
 
 const LoginForm = () => {
@@ -9,51 +10,54 @@ const LoginForm = () => {
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
-    // Manejar cambios en el formulario
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
 
-    // Manejar el envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
 
         try {
-            // Enviar datos al backend
             const response = await axios.post('http://localhost:3001/users/login', {
                 username: formData.usernameOrEmail,
                 email: formData.usernameOrEmail,
                 password: formData.password,
             });
 
-            // Manejar la respuesta
             if (response.status === 200) {
-                alert('Inicio de sesión exitoso');
-                // Guardar el token en el localStorage o gestionar la autenticación
                 localStorage.setItem('token', response.data.token);
-                // Redirigir o realizar otras acciones necesarias aquí
+                // Redirige a la página principal
+                window.location.href = '/';
             } else {
-                alert('Error al iniciar sesión');
+                showModalMessage('Error al iniciar sesión');
             }
         } catch (error) {
-            console.error('Error en la petición:', error);
-            setError(error.response?.data?.message || 'Error desconocido');
+            showModalMessage('Vaya! Las credenciales son incorrectas...');
         } finally {
             setLoading(false);
         }
     };
 
+    const showModalMessage = (message) => {
+        setError(message);
+        setShowModal(true);
+        setTimeout(() => {
+            setShowModal(false);
+        }, 2000); // 2 segundos
+    };
+
     return (
+        <div className={`col`}>
             <div className={`p-3`}>
                 <div className={`card ${styles.card_right}`}>
                     <h2>Login</h2>
                     <form onSubmit={handleSubmit}>
-                        {error && <p className={styles.error}>{error}</p>}
-                        <div className="form-floating mb-3 mt-4">
+                        <div className={`form-floating mb-3 mt-4`}>
                             <input
                                 type="text"
                                 className={`form-control`}
@@ -65,7 +69,7 @@ const LoginForm = () => {
                             />
                             <label htmlFor="usernameOrEmail">Username or Email</label>
                         </div>
-                        <div className="form-floating mb-3">
+                        <div className={`form-floating mb-3`}>
                             <input
                                 type="password"
                                 className={`form-control`}
@@ -87,6 +91,20 @@ const LoginForm = () => {
                     </form>
                 </div>
             </div>
+
+            {/* Modal */}
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Error</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{error}</Modal.Body>
+                <Modal.Footer>
+                    <Button className={`btn btn-outline-danger ${styles.boton_cerrar}`} onClick={() => setShowModal(false)}>
+                        Cerrar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </div>
     );
 };
 

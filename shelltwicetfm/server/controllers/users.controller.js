@@ -5,8 +5,6 @@ const User = require('../models/users.models');
 
 const secretKey = process.env.SECRET_KEY;
 
-console.log(secretKey);
-
 // Registro de users
 exports.signup = async (req, res) => {
     const { name, username, email, password } = req.body;

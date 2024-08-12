@@ -70,3 +70,7 @@ input {
     border-color: rgb(79, 180, 101) !important;
     border-width: 2px !important;
 }
+
+.boton_cerrar {
+    background-color: none !important;
+}
