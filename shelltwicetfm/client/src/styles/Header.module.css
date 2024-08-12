@@ -1,0 +1,47 @@
+.boton_login {
+    border-color: rgb(79, 180, 101) !important;
+    border-width: 2px !important;
+    border-radius: 15px !important;
+    color: black !important;
+    height: 40px;
+    padding: 6px !important;
+    margin-right: 0;
+}
+
+.boton_login:hover {
+    background-color: rgb(79, 180, 101) !important;
+}
+
+.boton_vender {
+    background-color: rgb(173, 223, 184) !important;
+    border-color: rgb(79, 180, 101) !important;
+    border-width: 2px !important;
+    border-radius: 20px !important;
+    color: black !important;
+    height: 40px;
+}
+
+.boton_vender:hover {
+    background-color: rgb(79, 180, 101) !important;
+}
+
+.boton_search {
+    background-color: rgb(173, 223, 184) !important;
+    border-color: rgb(79, 180, 101) !important;
+    border-width: 2px !important;
+    border-radius: 20px !important;
+    height: 40px;
+}
+
+.boton_search:hover {
+    background-color: rgb(79, 180, 101) !important;
+}
+
+.input_search {
+    width: 400px !important;
+    border-radius: 20px !important;
+}
+
+.container_navbar {
+    background-color: #fff;
+}
