@@ -21,9 +21,9 @@ const articuloSchema = new Schema({
     },
     fecha_publicacion: { type: Date, default: Date.now },
     estado: { type: String, enum: ["Disponible", "No Disponible"], default: "Disponible" },
-    categoria: { type: Schema.Types.ObjectId, ref: Categoria, required: true },
-    usuario_id: { type: Schema.Types.ObjectId, ref: users, required: true }
-    // array de mensajes 
+    //categoria: { type: Schema.Types.ObjectId, ref: Categoria, required: true },
+    //usuario_id: { type: Schema.Types.ObjectId, ref: users, required: true }
+    // array de mensajes sobre el artículo
 });
 
 const Articulo = mongoose.model('Articulo', articuloSchema);
