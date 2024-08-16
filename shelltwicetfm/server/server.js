@@ -10,6 +10,8 @@ const jwt = require('jsonwebtoken');
 
 // APIs
 const usersRoutes = require('./routes/users.routes.js');
+const articuloRoutes = require('./routes/articulo.routes.js');
+const categoriaRoutes = require('./routes/categoria.routes.js');
 
 const port = process.env.port || 3001;
 dotenv.config();
@@ -27,6 +29,8 @@ conectarDb();
 
 // Rutas controladores
 app.use('/users', usersRoutes);
+app.use('/categoria', categoriaRoutes);
+app.use('/articulo', articuloRoutes);
 
 // Conexion server
 app.listen(port, () => {
