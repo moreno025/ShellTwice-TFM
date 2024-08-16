@@ -1,0 +1,15 @@
+.carousel_image {
+    height: 300px;
+    object-fit: cover;
+}
+
+.carousel_caption {
+    color: rgb(0, 0, 0);
+    font-size: 25px;
+}
+
+.caption_container {
+    width: 300px;
+    background-color: rgb(201, 229, 164);
+    margin-bottom: 75px;
+}
