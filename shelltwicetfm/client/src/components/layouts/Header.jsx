@@ -30,7 +30,7 @@ const Header = () => {
             <nav className={`navbar navbar-expand-lg bg-body-tertiary ${style.container_navbar}`}>
                 <div className={`container-fluid`}>
                     {/* Logo */}
-                    <a className={`navbar-brand ${style.container_}`} href="#">
+                    <a className={`navbar-brand ${style.container}`} href="#">
                         <img src={logo} alt="Logo" width="150" height="50" className={`d-inline-block align-text-top`} />
                     </a>
 
