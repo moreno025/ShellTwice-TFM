@@ -29,7 +29,7 @@ exports.signup = async (req, res) => {
     }
 };
 
-// Login de users
+// Login de users por email y contraseña
 exports.login = async (req, res) => {
     const { username, email, password } = req.body;
     
