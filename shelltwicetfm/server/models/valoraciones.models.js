@@ -3,8 +3,8 @@ const users = require('./users.models');
 const Schema = mongoose.Schema;
 
 const valoracionSchema = new Schema({
-    //usuario_id: { type: Schema.Types.ObjectId, ref: users, required: true },
-    //valorado_por: { type: Schema.Types.ObjectId, ref: users, required: true },
+    usuario_id: { type: Schema.Types.ObjectId, ref: 'users', required: true },
+    valorado_por: { type: Schema.Types.ObjectId, ref: 'users', required: true },
     calificacion: { type: Number, min: 1, max: 5, required: true },
     comentario: { type: String, required: false },
     fecha_creacion: { type: Date, default: Date.now }
