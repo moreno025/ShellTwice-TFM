@@ -49,7 +49,7 @@ exports.login = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
-        const token = jwt.sign({ userId: user._id, username: user.username }, secretKey, { expiresIn: '1h' });
+        const token = jwt.sign({ _id: user._id, username: user.username }, secretKey, { expiresIn: '1h' });
         res.json({ token, message: 'Inicio de sesión exitoso' });
     } catch (error) {
         res.status(500).json({ message: error.message });
