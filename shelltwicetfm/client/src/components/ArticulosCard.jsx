@@ -12,7 +12,7 @@ const ArticuloCard = ({ titulo, descripcion, precio, imagen }) => {
                 <div className={`col-md-8`}>
                     <Card.Body>
                         <Card.Title>{titulo}</Card.Title>
-                        <Card.Text>{descripcion}</Card.Text>
+                        <Card.Text className={style.truncated_text}>{descripcion}</Card.Text>
                         <Card.Text>
                             <strong>Precio:</strong> {precio}€
                         </Card.Text>
