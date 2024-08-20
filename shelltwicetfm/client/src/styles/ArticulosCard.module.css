@@ -1,0 +1,35 @@
+.card_container{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.card_container:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.img_container {
+    height: 180px;
+    overflow: hidden;
+}
+
+.card_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.img_container {
+    height: 180px;
+}
+
+.truncated_text {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Número de líneas visibles */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5; /* Ajusta el line-height según el diseño */
+    max-height: 3rem;
+}
+
