@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const users = require('../models/users.models');
 const secretKey = 'sdgT42hjIsdfd4567SdfwwEtrGfv5679';
 
 const verifyToken = (req, res, next) => {
@@ -7,11 +8,28 @@ const verifyToken = (req, res, next) => {
 
     if (!token) return res.status(401).send('Acceso denegado');
 
-    jwt.verify(token, secretKey, (err, user) => {
+    jwt.verify(token, secretKey, async (err, user) => {
         if (err) return res.status(403).send('Token no válido');
-        req.user = user;
-        next();
+
+        try {
+            user = await users.findById(user._id);
+
+            if (!user) return res.status(404).send('Usuario no encontrado');
+            if (user.estado !== 'Activo') return res.status(403).send('Usuario no activo');
+
+            req.user = user;
+            next();
+        } catch (error) {
+            return res.status(500).json({ message: 'Error al verificar el usuario', error });
+        }
     });
 };
 
-module.exports = { verifyToken };
+const isAdmin = (req, res, next) => {
+    if (req.user.rol !== 0) {
+        return res.status(403).send('Acceso denegado: solo administradores');
+    }
+    next();
+};
+
+module.exports = { verifyToken, isAdmin };
