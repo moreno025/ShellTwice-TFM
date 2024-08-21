@@ -15,7 +15,7 @@ const userSchema = new Schema({
         default: 1
     },
     estado: { type: String, enum: ["Bloqueado", "Activo"], default: "Activo" },
-    //favoritos: [{ type: Schema.Types.ObjectId, ref: Articulo }],
+    favoritos: [{ type: Schema.Types.ObjectId, ref: 'Articulo' }],
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 });

@@ -1,16 +1,15 @@
 import Header from '../components/layouts/Header';
+import ArticulosList from '../components/ArticulosList';
 import Footer from '../components/layouts/Footer';
-import Main from '../components/layouts/Main';
-//import style from '../styles/Home.module.css';
 
-const Home = () => {
+const Articulos = () => {
     return (
         <>
             <Header />
-            <Main />
+            <ArticulosList />
             <Footer />
         </>
     );
 };
 
-export default Home;
+export default Articulos;
