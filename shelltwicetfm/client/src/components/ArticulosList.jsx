@@ -38,6 +38,7 @@ const ArticulosList = () => {
                         <Col key={articulo._id} xs={12} sm={6} md={4}>
                             <ArticuloCard
                                 key={articulo._id}
+                                _id={articulo._id}
                                 imagen={`http://localhost:3001${articulo.imagen}`}
                                 titulo={articulo.titulo}
                                 descripcion={articulo.descripcion}

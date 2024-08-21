@@ -8,5 +8,6 @@ router.post('/crearArticulo', verifyToken, articuloController.crearArticulo);
 router.delete('/borrarArticulo', verifyToken, articuloController.eliminarArticulo);
 router.put('/actualizarArticulo/:articuloId', verifyToken, articuloController.actualizarArticulo);
 router.get('/usuario/:usuarioId', articuloController.getArticulosPorUsuario);
+router.get('/:id', articuloController.getArticulo);
 
 module.exports = router;

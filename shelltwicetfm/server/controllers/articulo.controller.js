@@ -161,3 +161,17 @@ exports.getArticulosPorUsuario = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+
+// GET de un artículo con los datos
+exports.getArticulo = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const articulo = await Articulo.findById({_id: id}).populate('categoria').populate('usuario_id');
+        if (!articulo) {
+            return res.status(404).json({ message: 'Artículo no encontrado' });
+        }
+        res.status(200).json(articulo);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
