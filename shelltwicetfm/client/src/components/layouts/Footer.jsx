@@ -10,7 +10,9 @@ const Footer = () => {
         <Container>
             <Row>
             <Col md={4}>
-                <img src={logo} alt="Logo" width="150" height="50" className={`d-inline-block align-text-top`} />
+                <a href='/'>
+                    <img src={logo} alt="Logo" width="150" height="50" className={`d-inline-block align-text-top`} />
+                </a>
             </Col>
             <Col md={4}>
                 <h5>Visítanos!</h5>
