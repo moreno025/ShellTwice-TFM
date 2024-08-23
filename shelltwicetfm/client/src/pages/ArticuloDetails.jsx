@@ -5,6 +5,7 @@ import Footer from '../components/layouts/Footer';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Modal from 'react-bootstrap/Modal';
 import Toast from 'react-bootstrap/Toast';
+//import SidebarCarrito from '../components/SidebarCarrito';
 import { useAuth } from '../contexts/AuthContext';
 import style from '../styles/ArticuloDetails.module.css';
 
@@ -82,11 +83,10 @@ const ArticuloDetails = () => {
             setShowModal(true);
             return;
         }
-
         setToastMessage('Artículo añadido al carrito');
         setShowToast(true);
         setTimeout(() => setShowToast(false), 2000);
-    };    
+    }; 
 
     if (!articulo) return <p>Cargando...</p>;
 
@@ -95,7 +95,7 @@ const ArticuloDetails = () => {
             <Header />
             <div className={`container mb-4`}>
                 <div className={`row justify-content-center align-items-center`} style={{ minHeight: '70vh' }}>
-                    <div className={`col-md-10 col-lg-8`}>
+                    <div className={`col-sm-8 col-md-8`}>
                         <Breadcrumb className={`mt-4`}>
                             <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/" }}>
                                 Home
@@ -149,6 +149,9 @@ const ArticuloDetails = () => {
                             </div>
                         </div>
                     </div>
+                    {/*<div className={`col-4 col-md-4`}>
+                    <SidebarCarrito titulo={articulo.titulo} precio={articulo.precio} />
+                    </div>*/}
                 </div>
             </div>
 
@@ -160,8 +163,8 @@ const ArticuloDetails = () => {
                 <Modal.Body>
                     <p>Para {actionType === 'carrito' ? 'añadir el artículo al carrito' : actionType === 'favoritos' ? 'añadir el artículo a tus favoritos' : 'vender el artículo'}, por favor inicia sesión o regístrate.</p>
                     <div className="d-flex justify-content-end">
-                        <Link to="/login" className="btn btn-primary me-2">Iniciar Sesión</Link>
-                        <Link to="/signup" className="btn btn-secondary">Registrarse</Link>
+                        <Link to="/login" className={`btn btn-primary me-2 ${style.boton_sesion}`}>Iniciar Sesión</Link>
+                        <Link to="/signup" className={`btn ${style.boton_comprar}`}>Registrarse</Link>
                     </div>
                 </Modal.Body>
             </Modal>

@@ -11,7 +11,6 @@
     width: 100%;
     height: 450px; 
     object-fit: cover;
-    border-radius: 20px;
 }
 
 /* Contenedor de los detalles del artículo */
@@ -56,6 +55,20 @@ h3 {
     gap: 8px;
 }
 
+.boton_sesion {
+    background-color: rgb(79, 180, 101) !important;
+    border-color: rgb(79, 180, 101) !important;
+    color: white;
+    border-radius: 20px !important;
+    cursor: pointer;
+}
+
+.boton_sesion:hover {
+    background-color: rgb(173, 223, 184) !important;
+    color: black;
+    border-width: 2px;
+}
+
 /* Botón de favoritos cuando no es favorito */
 .boton_favoritos {
     border-color: rgb(79, 180, 101) !important;
@@ -96,3 +109,31 @@ h3 {
     color: #ffff !important;
     background-color: rgb(79, 180, 101) !important;
 }
+
+/* CustomSidebar.css */
+.sidebar {
+    position: fixed;
+    top: 70px; /* Ajusta según la altura de tu header */
+    right: 0;
+    width: 300px; /* Ajusta el ancho según tus necesidades */
+    height: calc(100vh - 70px); /* Ajusta la altura para que no cubra el footer */
+    background-color: white;
+    box-shadow: -4px 0 6px rgba(0, 0, 0, 0.1);
+    z-index: 1050; /* Asegúrate de que el sidebar esté encima de otros elementos */
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    overflow-y: auto; /* Permite el desplazamiento si el contenido es largo */
+}
+
+.sidebar.show {
+    transform: translateX(0);
+}
+
+.sidebar .btn-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+
+
