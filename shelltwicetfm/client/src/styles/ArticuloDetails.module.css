@@ -1,0 +1,98 @@
+/* Contenedor principal */
+.main_container {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 100%;
+    height: 100%;
+}
+
+/* Estilo para las imágenes del artículo */
+.card_img {
+    width: 100%;
+    height: 450px; 
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+/* Contenedor de los detalles del artículo */
+.articulo_container {
+    background-color: rgb(201, 229, 164);
+    border-radius: 20px;
+}
+
+/* Estilo adicional para detalles */
+.detail_container {
+    background-color: brown;
+    padding-top: 5px;
+    padding-left: 5px;
+}
+
+/* Centrado del título */
+h3 {
+    text-align: center;
+}
+
+/* Estilo para el contenedor del cuerpo del artículo */
+.body_container {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+/* Estilos para las etiquetas */
+.boton_etiquetas {
+    background-color: rgb(173, 223, 184) !important;
+    border-color: rgb(79, 180, 101) !important;
+    border-width: 2px !important;
+    border-radius: 20px !important;
+    color: black !important;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.etiquetas_container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* Botón de favoritos cuando no es favorito */
+.boton_favoritos {
+    border-color: rgb(79, 180, 101) !important;
+    border-width: 2px !important;
+    border-radius: 30px !important;
+    color: rgb(217, 62, 127) !important;
+    background-color: transparent !important;
+    transition: all 0.3s ease;
+}
+
+/* Botón de favoritos al pasar el cursor */
+.boton_favoritos:hover {
+    border-color: #ffff !important;
+    color: #ffff !important;
+    background-color: rgb(79, 180, 101) !important;
+}
+
+/* Botón de favoritos cuando ya es favorito */
+.boton_favoritos_active {
+    border-color: rgb(255, 105, 180) !important;
+    background-color: rgb(255, 192, 203) !important;
+    color: white !important;
+    border-width: 2px !important;
+    border-radius: 30px !important;
+}
+
+/* Botón de compra */
+.boton_comprar {
+    border-color: rgb(79, 180, 101) !important;
+    border-width: 2px !important;
+    border-radius: 30px !important;
+    color: rgb(35, 122, 54) !important;
+}
+
+/* Botón de compra al pasar el cursor */
+.boton_comprar:hover {
+    border-color: #ffff !important;
+    color: #ffff !important;
+    background-color: rgb(79, 180, 101) !important;
+}

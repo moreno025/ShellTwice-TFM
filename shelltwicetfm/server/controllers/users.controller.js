@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users.models');
+const Articulo = require('../models/articulo.models.js');
 
 const secretKey = process.env.SECRET_KEY;
 
@@ -55,3 +56,47 @@ exports.login = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// POST para alternar entre agregar y eliminar un artículo de favoritos
+exports.toggleFavorito = async (req, res) => {
+    try {
+        const { articuloId } = req.params;
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        const isFavorito = user.favoritos.includes(articuloId);
+        if (isFavorito) {
+            user.favoritos = user.favoritos.filter(fav => fav.toString() !== articuloId);
+            await user.save();
+            return res.json({ message: 'Artículo eliminado de favoritos' });
+        } else {
+            user.favoritos.push(articuloId);
+            await user.save();
+            return res.json({ message: 'Artículo añadido a favoritos' });
+        }
+    } catch (error) {
+        console.error('Error al alternar artículo de favoritos:', error);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
+
+// Ruta para obtener los favoritos del usuario
+exports.getFavoritos = async (req, res) => {
+    try {
+        const usuarioId = req.user._id; // ID del usuario autenticado
+        const user = await User.findById(usuarioId).populate({
+            path: 'favoritos',
+            populate: { path: 'categoria' }
+        });
+        if (!user || !user.favoritos || user.favoritos.length === 0) {
+            return res.status(404).json({ message: 'No se encontraron artículos en favoritos.' });
+        }
+        res.status(200).json(user.favoritos);
+    } catch (error) {
+        console.error('Error al obtener los favoritos:', error);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
+
