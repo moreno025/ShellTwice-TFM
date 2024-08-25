@@ -175,3 +175,30 @@ exports.getArticulo = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+exports.buscar = async (req, res) => {
+    try{
+        const { query } = req.query;
+        if(!query){
+            return res.status(400).json({ message: 'Query es requerido' });
+        }
+
+        const articulos = await Articulo.find({
+            $or: [
+                { titulo: {$regex: query, $options: 'i'} },
+                { etiquetas: { $regex: query, $options: 'i' } }
+            ]
+        }).populate('categoria').populate('usuario_id');
+
+        const categorias = await Categoria.find({
+            titulo: { $regex: query, $options: 'i' }
+        });
+        res.status(200).json({
+            articulos,
+            categorias
+        });
+    }catch(error){
+        console.error('Error en buscar:', error.message);
+        res.status(500).json({ message: error.message });
+    }
+};
