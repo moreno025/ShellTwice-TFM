@@ -1,0 +1,32 @@
+/* FiltrosBusqueda.module.css */
+.filtros_form {
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 200px;
+}
+
+.inputFiltro {
+    width: 150px !important;
+}
+
+.sidebar {
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.resultados {
+    padding: 20px;
+}
+
+.boton_aplicar {
+    border-color: rgb(79, 180, 101);
+    border-width: 2px;
+    background-color: rgb(71, 184, 96);
+}
+
+.boton_aplicar:hover {
+    background-color: rgb(97, 192, 117);
+    border-color: #f5f5f5;
+}
