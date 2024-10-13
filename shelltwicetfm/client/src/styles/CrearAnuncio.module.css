@@ -1,0 +1,35 @@
+.categoria_group .custom_radio_bootstrap input[type="radio"] { 
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.categoria_group .custom_radio_bootstrap input[type="radio"] + label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: 2px solid rgb(79, 180, 101);
+    background-color: white;
+    border-radius: 50%;
+    vertical-align: middle;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.categoria_group .custom_radio_bootstrap input[type="radio"]:checked + label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: 2px solid rgb(79, 180, 101);
+    background-color: rgb(143, 208, 157);
+    border-radius: 50%;
+    vertical-align: middle;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.modalExitoAnuncio {
+    background-color: aliceblue;
+}

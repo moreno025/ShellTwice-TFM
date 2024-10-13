@@ -23,6 +23,7 @@ const app = express();
 app.use(cors({
     origin: 'http://localhost:5173',
     allowedHeaders: ['Authorization', 'Content-Type'],
+    credentials: true
 }));
 app.use(express.json());
 app.use(bodyParser.json());

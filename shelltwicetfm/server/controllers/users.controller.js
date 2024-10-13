@@ -46,16 +46,20 @@ exports.login = async (req, res) => {
         if (!user) {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
+
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
+
         const token = jwt.sign({ _id: user._id, username: user.username }, secretKey, { expiresIn: '1h' });
-        res.json({ token, message: 'Inicio de sesión exitoso' });
+
+        res.json({ token, userId: user._id, message: 'Inicio de sesión exitoso' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // POST para alternar entre agregar y eliminar un artículo de favoritos
 exports.toggleFavorito = async (req, res) => {

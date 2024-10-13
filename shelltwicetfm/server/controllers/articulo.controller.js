@@ -28,7 +28,8 @@ exports.getProductsByCategory = async (req, res) => {
 // POST para crear un artículo
 exports.crearArticulo = async (req, res) => {
     try {
-        const { titulo, descripcion, precio, etiquetas, ubicacion, categoria, usuario_id } = req.body;
+        const { titulo, descripcion, precio, ubicacion, categoria, usuario_id } = req.body;
+        const etiquetas = req.body.etiquetas ? JSON.parse(req.body.etiquetas) : [];
 
         // Validar que la categoría existe
         const categoriaExistente = await Categoria.findById(categoria);
@@ -55,11 +56,12 @@ exports.crearArticulo = async (req, res) => {
 
         // Guardar la imagen
         const imagePath = path.join(__dirname, '..', 'uploads', `${Date.now()}_${imagen.name}`);
-        imagen.mv(imagePath, (err) => {
-            if (err) {
-                return res.status(500).json({ message: 'Error al subir la imagen', err });
-            }
-        });
+        try {
+            await imagen.mv(imagePath);
+        } catch (err) {
+            return res.status(500).json({ message: 'Error al subir la imagen', err });
+        }
+        
 
         // Crear y guardar el nuevo artículo
         const nuevoArticulo = new Articulo({
