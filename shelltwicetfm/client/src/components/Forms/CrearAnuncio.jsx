@@ -73,7 +73,7 @@ const CrearAnuncio = ({ show, onClose }) => {
                 setCategoriaSeleccionada('');
                 setEtiquetas('');
 
-                console.log('el data en el response vale: '+data);
+                console.log('Anuncio creado correctamente: '+data);
             } else {
                 console.error('Error al crear el anuncio');
             }

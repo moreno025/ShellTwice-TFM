@@ -10,8 +10,8 @@ import CrearAnuncio from '../Forms/CrearAnuncio';
 const Header = () => {
     const { isAuthenticated, logout } = useAuth();
     const [showSidebar, setShowSidebar] = useState(false);
-    const [showModal, setShowModal] = useState(false); // Controlar el estado del modal de CrearAnuncio
-    const [showLoginModal, setShowLoginModal] = useState(false); // Controlar el estado del modal de Login
+    const [showModal, setShowModal] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
 
