@@ -1,0 +1,18 @@
+.perfil-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.perfil-info .img-fluid {
+    max-width: 150px;
+    height: auto;
+}
+
+.custom-tabs .nav-link {
+    background-color: #f8f9fa;
+}
+
+.custom-tabs .nav-link.active {
+    background-color: #007bff;
+    color: white;
+}
