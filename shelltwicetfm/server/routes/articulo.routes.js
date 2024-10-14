@@ -8,7 +8,7 @@ router.delete('/borrarArticulo', verifyToken, articuloController.eliminarArticul
 router.get('/buscar', articuloController.buscar);
 router.get('/categorias/:titulo', articuloController.getProductsByCategory);
 router.put('/actualizarArticulo/:articuloId', verifyToken, articuloController.actualizarArticulo);
-router.get('/usuario/:usuarioId', articuloController.getArticulosPorUsuario);
+router.get('/usuario/:id', articuloController.getArticulosPorUsuario);
 router.get('/:id', articuloController.getArticulo);
 
 module.exports = router;
