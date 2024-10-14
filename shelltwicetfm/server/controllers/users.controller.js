@@ -37,23 +37,18 @@ exports.login = async (req, res) => {
     if (!password || (!username && !email)) {
         return res.status(400).json({ message: 'Nombre de usuario o email y contraseña son obligatorios' });
     }
-
     try {
         const user = await User.findOne({
             $or: [{ username }, { email }]
         });
-
         if (!user) {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
-
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
-
         const token = jwt.sign({ _id: user._id, username: user.username }, secretKey, { expiresIn: '1h' });
-
         res.json({ token, userId: user._id, message: 'Inicio de sesión exitoso' });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -101,6 +96,7 @@ exports.getFavoritos = async (req, res) => {
         const favoritosUnicos = Array.from(
             new Map(user.favoritos.map(fav => [fav._id.toString(), fav])).values()
         );
+        
         res.status(200).json(favoritosUnicos);
     } catch (error) {
         console.error('Error al obtener los favoritos:', error);
