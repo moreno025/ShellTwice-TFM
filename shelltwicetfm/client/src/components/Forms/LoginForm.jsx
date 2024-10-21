@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
+import { useAuth } from '../../contexts/AuthContext';
 import styles from '../../styles/SignUp.module.css';
 
 const LoginForm = () => {
+    const { login } = useAuth();
     const [formData, setFormData] = useState({
         usernameOrEmail: '',
         password: '',
@@ -30,8 +32,9 @@ const LoginForm = () => {
             });
 
             if (response.status === 200) {
-                localStorage.setItem('token', response.data.token);
-                // Redirige a la página principal
+                const { token, userId } = response.data;
+                login(token, userId);
+
                 window.location.href = '/';
             } else {
                 showModalMessage('Error al iniciar sesión');
@@ -48,7 +51,7 @@ const LoginForm = () => {
         setShowModal(true);
         setTimeout(() => {
             setShowModal(false);
-        }, 2000); // 2 segundos
+        }, 2000);
     };
 
     return (

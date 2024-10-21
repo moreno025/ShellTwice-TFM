@@ -37,12 +37,10 @@ exports.login = async (req, res) => {
     if (!password || (!username && !email)) {
         return res.status(400).json({ message: 'Nombre de usuario o email y contraseña son obligatorios' });
     }
-
     try {
         const user = await User.findOne({
             $or: [{ username }, { email }]
         });
-
         if (!user) {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
@@ -51,11 +49,12 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
         const token = jwt.sign({ _id: user._id, username: user.username }, secretKey, { expiresIn: '1h' });
-        res.json({ token, message: 'Inicio de sesión exitoso' });
+        res.json({ token, userId: user._id, message: 'Inicio de sesión exitoso' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // POST para alternar entre agregar y eliminar un artículo de favoritos
 exports.toggleFavorito = async (req, res) => {
@@ -85,18 +84,24 @@ exports.toggleFavorito = async (req, res) => {
 // Ruta para obtener los favoritos del usuario
 exports.getFavoritos = async (req, res) => {
     try {
-        const usuarioId = req.user._id; // ID del usuario autenticado
+        const usuarioId = req.user._id;
         const user = await User.findById(usuarioId).populate({
             path: 'favoritos',
             populate: { path: 'categoria' }
         });
+
         if (!user || !user.favoritos || user.favoritos.length === 0) {
             return res.status(404).json({ message: 'No se encontraron artículos en favoritos.' });
         }
-        res.status(200).json(user.favoritos);
+        const favoritosUnicos = Array.from(
+            new Map(user.favoritos.map(fav => [fav._id.toString(), fav])).values()
+        );
+        
+        res.status(200).json(favoritosUnicos);
     } catch (error) {
         console.error('Error al obtener los favoritos:', error);
         res.status(500).json({ message: 'Error interno del servidor' });
     }
 };
+
 

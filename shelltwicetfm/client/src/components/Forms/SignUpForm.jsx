@@ -13,8 +13,8 @@ const SignUpForm = () => {
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { login } = useAuth(); // Obtén la función login del contexto
-    const navigate = useNavigate(); // Obtén la función navigate para redirigir
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;

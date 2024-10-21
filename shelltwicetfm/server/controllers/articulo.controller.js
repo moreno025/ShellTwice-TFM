@@ -2,6 +2,7 @@ const Articulo = require('../models/articulo.models.js');
 const Categoria = require('../models/categoria.models.js');
 const Users = require('../models/users.models.js');
 const path = require('path');
+const mongoose = require('mongoose');
 const fs = require('fs');
 
 // GET de los productos según la categoría (user)
@@ -28,40 +29,32 @@ exports.getProductsByCategory = async (req, res) => {
 // POST para crear un artículo
 exports.crearArticulo = async (req, res) => {
     try {
-        const { titulo, descripcion, precio, etiquetas, ubicacion, categoria, usuario_id } = req.body;
+        const { titulo, descripcion, precio, ubicacion, categoria, usuario_id } = req.body;
+        const etiquetas = req.body.etiquetas ? JSON.parse(req.body.etiquetas) : [];
 
-        // Validar que la categoría existe
         const categoriaExistente = await Categoria.findById(categoria);
         if (!categoriaExistente) {
             return res.status(404).json({ message: 'Categoría no encontrada' });
         }
-
-        // Validar que el usuario existe
         const usuarioExistente = await Users.findById(usuario_id);
         if (!usuarioExistente) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
-
-        // Validar la imagen
         if (!req.files || !req.files.imagen) {
             return res.status(400).json({ message: 'Se requiere una imagen para el artículo' });
         }
-
         const imagen = req.files.imagen;
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
         if (!allowedTypes.includes(imagen.mimetype)) {
             return res.status(400).json({ message: 'Solo se permiten archivos de tipo imagen (jpeg, png, gif, jpg)' });
         }
-
-        // Guardar la imagen
         const imagePath = path.join(__dirname, '..', 'uploads', `${Date.now()}_${imagen.name}`);
-        imagen.mv(imagePath, (err) => {
-            if (err) {
-                return res.status(500).json({ message: 'Error al subir la imagen', err });
-            }
-        });
+        try {
+            await imagen.mv(imagePath);
+        } catch (err) {
+            return res.status(500).json({ message: 'Error al subir la imagen', err });
+        }
 
-        // Crear y guardar el nuevo artículo
         const nuevoArticulo = new Articulo({
             imagen: `/uploads/${path.basename(imagePath)}`,
             titulo,
@@ -80,28 +73,29 @@ exports.crearArticulo = async (req, res) => {
     }
 };
 
-
 //DELETE para borrar un articulo (admin, user verificado)
 exports.eliminarArticulo = async (req, res) => {
     try {
         const { articuloId } = req.params;
         const usuarioAutenticado = req.user;
-        // Buscar el artículo por ID
+
         const articulo = await Articulo.findById(articuloId);
         if (!articulo) {
             return res.status(404).json({ message: 'Artículo no encontrado' });
         }
-        // Verificar si el usuario es el dueño del artículo o es un administrador
+
         if (articulo.usuario_id.toString() !== usuarioAutenticado._id.toString() && usuarioAutenticado.rol !== 0) {
             return res.status(403).json({ message: 'No tienes permisos para eliminar este artículo' });
         }
-        // Eliminar el artículo
+
         await articulo.deleteOne();
         res.status(200).json({ message: 'Artículo eliminado exitosamente' });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.error(error);
+        return res.status(500).json({ message: 'Error del servidor, inténtalo nuevamente' });
     }
 };
+
 
 // PUT para editar un artículo (user verificado y admin)
 exports.actualizarArticulo = async (req, res) => {
@@ -151,13 +145,19 @@ exports.actualizarArticulo = async (req, res) => {
 // GET artículo de un usuario
 exports.getArticulosPorUsuario = async (req, res) => {
     try {
-        const usuarioId = req.user._id;
-        const articulos = await Articulo.find({ usuario_id: usuarioId }).populate('categoria').populate('usuario_id');
+        const usuarioId = req.params.id;
+        if (!mongoose.Types.ObjectId.isValid(usuarioId)) {
+            return res.status(400).json({ message: 'ID de usuario no válido' });
+        }
+        const articulos = await Articulo.find({ usuario_id: usuarioId })
+            .populate('categoria')
+            .populate('usuario_id');
         if (articulos.length === 0) {
             return res.status(204).json({ message: 'No se encontraron artículos para este usuario' });
         }
-        res.status(200).json(articulos);
+        return res.status(200).json(articulos);
     } catch (error) {
+        console.error('Error al obtener artículos:', error);
         return res.status(500).json({ message: error.message });
     }
 };
@@ -172,6 +172,31 @@ exports.getArticulo = async (req, res) => {
         }
         res.status(200).json(articulo);
     } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.buscar = async (req, res) => {
+    try{
+        const { query } = req.query;
+        if(!query){
+            return res.status(400).json({ message: 'Query es requerido' });
+        }
+        const articulos = await Articulo.find({
+            $or: [
+                { titulo: {$regex: query, $options: 'i'} },
+                { etiquetas: { $regex: query, $options: 'i' } }
+            ]
+        }).populate('categoria').populate('usuario_id');
+        const categorias = await Categoria.find({
+            titulo: { $regex: query, $options: 'i' }
+        });
+        res.status(200).json({
+            articulos,
+            categorias
+        });
+    }catch(error){
+        console.error('Error en buscar:', error.message);
         res.status(500).json({ message: error.message });
     }
 };
