@@ -73,25 +73,29 @@ exports.crearArticulo = async (req, res) => {
     }
 };
 
-
 //DELETE para borrar un articulo (admin, user verificado)
 exports.eliminarArticulo = async (req, res) => {
     try {
         const { articuloId } = req.params;
         const usuarioAutenticado = req.user;
+
         const articulo = await Articulo.findById(articuloId);
         if (!articulo) {
             return res.status(404).json({ message: 'Artículo no encontrado' });
         }
+
         if (articulo.usuario_id.toString() !== usuarioAutenticado._id.toString() && usuarioAutenticado.rol !== 0) {
             return res.status(403).json({ message: 'No tienes permisos para eliminar este artículo' });
         }
+
         await articulo.deleteOne();
         res.status(200).json({ message: 'Artículo eliminado exitosamente' });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.error(error);
+        return res.status(500).json({ message: 'Error del servidor, inténtalo nuevamente' });
     }
 };
+
 
 // PUT para editar un artículo (user verificado y admin)
 exports.actualizarArticulo = async (req, res) => {
