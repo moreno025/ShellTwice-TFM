@@ -16,3 +16,47 @@
     background-color: #007bff;
     color: white;
 }
+
+.custom_radio_bootstrap input[type="radio"] { 
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.custom_radio_bootstrap input[type="radio"] + label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: 2px solid rgb(79, 180, 101);
+    background-color: white;
+    border-radius: 50%;
+    vertical-align: middle;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.custom_radio_bootstrap input[type="radio"]:checked + label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: 2px solid rgb(79, 180, 101);
+    background-color: rgb(143, 208, 157);
+    border-radius: 50%;
+    vertical-align: middle;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.boton_detalles{
+    border: 2px solid rgb(79, 180, 101);
+    background-color: rgb(143, 208, 157);
+    border-radius: 5px;
+    color: black;
+}
+
+.boton_detalles:hover{
+    background-color: rgb(79, 180, 101) !important;
+    border: 2px solid rgb(143, 208, 157);
+}
