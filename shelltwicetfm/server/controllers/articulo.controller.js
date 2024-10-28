@@ -96,7 +96,6 @@ exports.eliminarArticulo = async (req, res) => {
     }
 };
 
-
 // PUT para editar un artículo (user verificado y admin)
 exports.actualizarArticulo = async (req, res) => {
     try {
@@ -107,8 +106,14 @@ exports.actualizarArticulo = async (req, res) => {
         if (!articulo) {
             return res.status(404).json({ message: 'Artículo no encontrado' });
         }
-        const camposActualizables = ['imagen', 'titulo', 'descripcion', 'precio', 'etiquetas', 'ubicacion', 'estado', 'categoria'];
+
+        if (articulo.usuario_id.toString() !== usuarioAutenticado._id.toString() && usuarioAutenticado.rol !== 0) {
+            return res.status(403).json({ message: 'No tienes permisos para editar este artículo' });
+        }
+
+        const camposActualizables = ['titulo', 'descripcion', 'precio', 'etiquetas', 'ubicacion', 'estado', 'categoria'];
         const updates = {};
+
         for (const campo of camposActualizables) {
             if (req.body[campo] !== undefined) {
                 updates[campo] = req.body[campo];
@@ -123,24 +128,22 @@ exports.actualizarArticulo = async (req, res) => {
             }
 
             const imagePath = path.join(__dirname, '..', 'uploads', `${Date.now()}_${imagen.name}`);
-            imagen.mv(imagePath, (err) => {
-                if (err) {
-                    return res.status(500).json({ message: 'Error al subir la imagen', err });
-                }
-            });
+            await imagen.mv(imagePath);
             updates.imagen = `/uploads/${path.basename(imagePath)}`;
         }
-
         updates.updatedAt = Date.now();
+
         const articuloActualizado = await Articulo.findByIdAndUpdate(articuloId, updates, { new: true })
             .populate('categoria')
             .populate('usuario_id');
 
         res.status(200).json({ message: 'Artículo actualizado exitosamente', articulo: articuloActualizado });
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.error('Error al actualizar el artículo:', error.message);
+        return res.status(500).json({ message: 'Error del servidor, inténtalo nuevamente' });
     }
 };
+
 
 // GET artículo de un usuario
 exports.getArticulosPorUsuario = async (req, res) => {
