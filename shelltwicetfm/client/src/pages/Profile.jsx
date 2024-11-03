@@ -15,6 +15,7 @@ const Profile = () => {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [articuloId, setArticuloId] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
 
     // Estados del formulario
     const [titulo, setTitulo] = useState('');
@@ -232,6 +233,44 @@ const Profile = () => {
         }
     };
 
+    const handleProfileSubmit = async (e) => {
+        e.preventDefault();
+    
+        const updatedUserData = {
+            username,
+            name,
+            email,
+            estado,
+        };
+    
+        try {
+            const response = await fetch(`http://localhost:3001/users/actualizarUsuario/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: JSON.stringify(updatedUserData),
+            });
+    
+            if (response.ok) {
+                setToastMessage('Datos actualizados exitosamente.');
+                setShowToast(true);
+                setIsEditing(false);
+            } else {
+                const errorData = await response.json();
+                console.error('Error al actualizar el perfil:', errorData.message);
+                setToastMessage('Hubo un error al actualizar los datos.');
+                setShowToast(true);
+            }
+        } catch (error) {
+            console.error('Error en la petición de actualización de perfil:', error);
+            setToastMessage('Error de red al actualizar los datos.');
+            setShowToast(true);
+        }
+    };
+    
+
     return (
         <>
             <Header />
@@ -309,66 +348,115 @@ const Profile = () => {
                         </Row>
                     </Tab>
 
-                    <Tab eventKey="info" title="Mis Datos">
-                        <Row>
-                            <Col>
-                                <Form>
-                                    <Form.Group controlId="formName">
-                                        <Form.Label>Nombre</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            value={name}
+                    <Tab eventKey="perfil" title="Mis Datos">
+                        {isEditing ? (
+                            <Form onSubmit={handleProfileSubmit}>
+                                <Form.Group controlId="formName">
+                                    <Form.Label>Nombre</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                </Form.Group>
+
+                                <Form.Group controlId="formUsername" className="mt-3">
+                                    <Form.Label>Username</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                    />
+                                </Form.Group>
+
+                                <Form.Group controlId="formEmail" className="mt-3">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                </Form.Group>
+
+                                <Form.Group controlId="formStatus" className="mt-3">
+                                    <Form.Label>Estado</Form.Label>
+                                    <div className='mb-3'>
+                                        <Form.Check
+                                            inline
+                                            label="Activo"
+                                            type="radio"
+                                            name="status"
+                                            id="statusActivo"
+                                            value="Activo"
+                                            checked={estado === 'Activo'}
+                                            onChange={() => setEstado('Activo')}
+                                            className={styles.custom_radio_bootstrap}
+                                        />
+                                        <Form.Check
+                                            inline
+                                            label="Inactivo"
+                                            type="radio"
+                                            name="status"
+                                            id="statusInactivo"
+                                            value="Inactivo"
+                                            checked={estado === 'Inactivo'}
+                                            onChange={() => setEstado('Inactivo')}
+                                            className={styles.custom_radio_bootstrap}
+                                        />
+                                    </div>
+                                </Form.Group>
+                                <Button type="submit" className={styles.boton_detalles}>Guardar cambios</Button>
+                            </Form>
+                        ) : (
+                            <Form>
+                                <Form.Group controlId="formName">
+                                    <Form.Label>Nombre</Form.Label>
+                                    <Form.Control type="text" value={name} readOnly />
+                                </Form.Group>
+
+                                <Form.Group controlId="formUsername" className="mt-3">
+                                    <Form.Label>Username</Form.Label>
+                                    <Form.Control type="text" value={username} readOnly />
+                                </Form.Group>
+
+                                <Form.Group controlId="formEmail" className="mt-3">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control type="email" value={email} readOnly />
+                                </Form.Group>
+
+                                <Form.Group controlId="formStatus" className="mt-3 mb-3">
+                                    <Form.Label>Estado</Form.Label>
+                                    <div>
+                                        <Form.Check
+                                            inline
+                                            label="Activo"
+                                            type="radio"
+                                            name="status"
+                                            id="statusActivo"
+                                            value="Activo"
+                                            checked={estado === 'Activo'}
+                                            className={styles.custom_radio_bootstrap}
                                             readOnly
                                         />
-                                    </Form.Group>
-
-                                    <Form.Group controlId="formUsername" className="mt-3">
-                                        <Form.Label>Username</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            value={username}
+                                        <Form.Check
+                                            inline
+                                            label="Inactivo"
+                                            type="radio"
+                                            name="status"
+                                            id="statusInactivo"
+                                            value="Inactivo"
+                                            checked={estado === 'Inactivo'}
+                                            className={styles.custom_radio_bootstrap}
                                             readOnly
                                         />
-                                    </Form.Group>
-
-                                    <Form.Group controlId="formEmail" className="mt-3">
-                                        <Form.Label>Email</Form.Label>
-                                        <Form.Control
-                                            type="email"
-                                            value={email}
-                                            readOnly
-                                        />
-                                    </Form.Group>
-
-                                    <Form.Group controlId="formStatus" className="mt-3">
-                                        <Form.Label>Estado</Form.Label>
-                                        <div>
-                                            <Form.Check
-                                                inline
-                                                label="Activo"
-                                                type="radio"
-                                                name="status"
-                                                id="statusActivo"
-                                                value="Activo"
-                                                checked={estado === 'Activo'}
-                                                className={styles.custom_radio_bootstrap}
-                                            />
-                                            <Form.Check
-                                                inline
-                                                label="Inactivo"
-                                                type="radio"
-                                                name="status"
-                                                id="statusInactivo"
-                                                value="Inactivo"
-                                                checked={estado === 'Inactivo'}
-                                                className={styles.custom_radio_bootstrap}
-                                            />
-                                        </div>
-                                    </Form.Group>
-
-                                </Form>
-                            </Col>
-                        </Row>
+                                    </div>
+                                </Form.Group>
+                            </Form>
+                        )}
+                        
+                        <Button onClick={() => setIsEditing(!isEditing)} className={styles.boton_detalles}>
+                            {isEditing ? 'Cancelar' : 'Editar perfil'}
+                        </Button>
                     </Tab>
                 </Tabs>
             </div>
