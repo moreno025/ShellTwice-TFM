@@ -24,11 +24,16 @@ exports.signup = async (req, res) => {
 
     try {
         const newUser = await user.save();
-        res.json({ message: 'Usuario creado con éxito', newUser });
+        const token = jwt.sign({ id: newUser._id }, secretKey, {
+            expiresIn: '1h'
+        });
+        res.status(200).json({ message: 'Usuario creado con éxito', newUser, token });
     } catch (error) {
+        console.error('Error al crear el usuario:', error);
         res.status(400).json({ message: error.message });
     }
 };
+
 
 // Login de users por email y contraseña
 exports.login = async (req, res) => {
@@ -48,6 +53,7 @@ exports.login = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
+
         const token = jwt.sign({ _id: user._id, username: user.username }, secretKey, { expiresIn: '1h' });
         res.json({ token, userId: user._id, message: 'Inicio de sesión exitoso' });
     } catch (error) {
@@ -61,6 +67,7 @@ exports.toggleFavorito = async (req, res) => {
     try {
         const { articuloId } = req.params;
         const user = await User.findById(req.user._id);
+        console.log('el user vale: ', user);
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
@@ -101,6 +108,20 @@ exports.getFavoritos = async (req, res) => {
     } catch (error) {
         console.error('Error al obtener los favoritos:', error);
         res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
+
+exports.getInfoUser = async (req, res) => {
+    try{
+        const user = await User.findById(req.user._id).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        res.json(user);
+    }catch(error){
+        console.error('Error al obtener la información del usuario:', error);
     }
 };
 

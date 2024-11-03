@@ -9,8 +9,8 @@ const Profile = () => {
     const { userId } = useAuth();
     const [favoritos, setFavoritos] = useState([]);
     const [articulosVendidos, setArticulosVendidos] = useState([]);
-    const [showDeleteModal, setShowDeleteModal] = useState(false); // Modal para eliminar
-    const [showEditModal, setShowEditModal] = useState(false);    // Modal para editar
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
     const [articuloAEliminar, setArticuloAEliminar] = useState(null);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
@@ -25,6 +25,13 @@ const Profile = () => {
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
     const [categorias, setCategorias] = useState([]);
     const [foto, setFoto] = useState(null);
+
+    // Estados para la información del usuario
+    const [username, setUsername] = useState('');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [estado, setEstado] = useState('');
+
 
     useEffect(() => {
         const obtenerFavoritos = async () => {
@@ -77,16 +84,40 @@ const Profile = () => {
             }
         };
 
+        const obtenerInfoUsuario = async () => {
+            try {
+                const response = await fetch('http://localhost:3001/users/me', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    setUsername(userData.username || '');
+                    setName(userData.name || '');
+                    setEmail(userData.email || '');
+                    setEstado(userData.estado || '');
+                } else {
+                    console.error('Error al obtener la información del usuario:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error en la petición de obtener información del usuario:', error);
+            }
+        };
+    
+
         if (userId) {
             obtenerFavoritos();
             obtenerArticulosVendidos();
             obtenerCategorias();
+            obtenerInfoUsuario();
         }
     }, [userId]);
 
     const handleEliminarClick = (articuloId) => {
         setArticuloAEliminar(articuloId);
-        setShowDeleteModal(true);  // Usamos el modal de eliminación
+        setShowDeleteModal(true);
     };
 
     const handleEliminarConfirmado = async () => {
@@ -199,14 +230,14 @@ const Profile = () => {
             setToastMessage('Error de red al actualizar el artículo.');
             setShowToast(true);
         }
-    };    
+    };
 
     return (
         <>
             <Header />
             <div className="container mt-5 mb-5">
                 <h2>Perfil del Usuario</h2>
-                <Tabs defaultActiveKey="favoritos" id="perfil-usuario-tabs" className="mb-3">
+                <Tabs defaultActiveKey="favoritos" id="perfil-usuario-tabs" className="mb-3 mt-3">
                     <Tab eventKey="favoritos" title="Favoritos">
                         <Row>
                             {favoritos.length > 0 ? (
@@ -235,7 +266,7 @@ const Profile = () => {
                         </Row>
                     </Tab>
 
-                    <Tab eventKey="vendidos" title="Mis artículos vendidos">
+                    <Tab eventKey="vendidos" title="Mis artículos">
                         <Row>
                             {articulosVendidos.length > 0 ? (
                                 articulosVendidos.map((articulo) => (
@@ -251,6 +282,9 @@ const Profile = () => {
                                                 <Card.Title>{articulo.titulo}</Card.Title>
                                                 <Card.Text>
                                                     <strong>Precio:</strong> ${articulo.precio}
+                                                </Card.Text>
+                                                <Card.Text>
+                                                    <strong>Estado:</strong> {articulo.estado}
                                                 </Card.Text>
                                                 <Button
                                                     variant="warning"
@@ -272,6 +306,68 @@ const Profile = () => {
                             ) : (
                                 <p>No tienes artículos vendidos</p>
                             )}
+                        </Row>
+                    </Tab>
+
+                    <Tab eventKey="info" title="Mis Datos">
+                        <Row>
+                            <Col>
+                                <Form>
+                                    <Form.Group controlId="formName">
+                                        <Form.Label>Nombre</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={name}
+                                            readOnly
+                                        />
+                                    </Form.Group>
+
+                                    <Form.Group controlId="formUsername" className="mt-3">
+                                        <Form.Label>Username</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={username}
+                                            readOnly
+                                        />
+                                    </Form.Group>
+
+                                    <Form.Group controlId="formEmail" className="mt-3">
+                                        <Form.Label>Email</Form.Label>
+                                        <Form.Control
+                                            type="email"
+                                            value={email}
+                                            readOnly
+                                        />
+                                    </Form.Group>
+
+                                    <Form.Group controlId="formStatus" className="mt-3">
+                                        <Form.Label>Estado</Form.Label>
+                                        <div>
+                                            <Form.Check
+                                                inline
+                                                label="Activo"
+                                                type="radio"
+                                                name="status"
+                                                id="statusActivo"
+                                                value="Activo"
+                                                checked={estado === 'Activo'}
+                                                className={styles.custom_radio_bootstrap}
+                                            />
+                                            <Form.Check
+                                                inline
+                                                label="Inactivo"
+                                                type="radio"
+                                                name="status"
+                                                id="statusInactivo"
+                                                value="Inactivo"
+                                                checked={estado === 'Inactivo'}
+                                                className={styles.custom_radio_bootstrap}
+                                            />
+                                        </div>
+                                    </Form.Group>
+
+                                </Form>
+                            </Col>
                         </Row>
                     </Tab>
                 </Tabs>
