@@ -74,6 +74,9 @@ const ArticuloDetails = () => {
             }
         } catch (error) {
             console.error('Error al actualizar favoritos:', error);
+            if (error.response) {
+                console.error('Error de respuesta:', error.response.data);
+            }
         }
     };
 
