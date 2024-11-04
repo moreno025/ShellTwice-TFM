@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import Header from '../components/layouts/Header';
 import Footer from '../components/layouts/Footer';
 import styles from '../styles/Profile.module.css';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
     const { userId } = useAuth();
@@ -282,21 +283,23 @@ const Profile = () => {
                             {favoritos.length > 0 ? (
                                 favoritos.map((favorito) => (
                                     <Col key={`favorito-${favorito._id}`} xs={12} sm={6} md={4} className="mb-4">
-                                        <Card>
-                                            <Card.Img
-                                                variant="top"
-                                                src={`http://localhost:3001${favorito.imagen}`}
-                                                alt={favorito.titulo}
-                                                style={{ height: '150px', objectFit: 'cover' }}
-                                            />
-                                            <Card.Body>
-                                                <Card.Title>{favorito.titulo}</Card.Title>
-                                                <Card.Text>
-                                                    <strong>Precio:</strong> ${favorito.precio}
-                                                </Card.Text>
-                                                <Button className = {styles.boton_detalles} variant="primary">Ver detalles</Button>
-                                            </Card.Body>
-                                        </Card>
+                                        <Link to={`/articulo/${favorito._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <Card>
+                                                <Card.Img
+                                                    variant="top"
+                                                    src={`http://localhost:3001${favorito.imagen}`}
+                                                    alt={favorito.titulo}
+                                                    style={{ height: '150px', objectFit: 'cover' }}
+                                                />
+                                                <Card.Body>
+                                                    <Card.Title>{favorito.titulo}</Card.Title>
+                                                    <Card.Text>
+                                                        <strong>Precio:</strong> ${favorito.precio}
+                                                    </Card.Text>
+                                                    <Button className={styles.boton_detalles} variant="primary">Ver detalles</Button>
+                                                </Card.Body>
+                                            </Card>
+                                        </Link>
                                     </Col>
                                 ))
                             ) : (
@@ -310,36 +313,31 @@ const Profile = () => {
                             {articulosVendidos.length > 0 ? (
                                 articulosVendidos.map((articulo) => (
                                     <Col key={`articulo-${articulo._id}`} xs={12} sm={6} md={4} className="mb-4">
-                                        <Card>
-                                            <Card.Img
-                                                variant="top"
-                                                src={`http://localhost:3001${articulo.imagen}`}
-                                                alt={articulo.titulo}
-                                                style={{ height: '150px', objectFit: 'cover' }}
-                                            />
-                                            <Card.Body>
-                                                <Card.Title>{articulo.titulo}</Card.Title>
-                                                <Card.Text>
-                                                    <strong>Precio:</strong> ${articulo.precio}
-                                                </Card.Text>
-                                                <Card.Text>
-                                                    <strong>Estado:</strong> {articulo.estado}
-                                                </Card.Text>
-                                                <Button
-                                                    variant="warning"
-                                                    onClick={() => handleEditar(articulo._id)}
-                                                >
-                                                    Editar
-                                                </Button>
-                                                <Button
-                                                    variant="danger"
-                                                    className="ms-2"
-                                                    onClick={() => handleEliminarClick(articulo._id)}
-                                                >
-                                                    Eliminar
-                                                </Button>
-                                            </Card.Body>
-                                        </Card>
+                                        <Link to={`/articulo/${articulo._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <Card>
+                                                <Card.Img
+                                                    variant="top"
+                                                    src={`http://localhost:3001${articulo.imagen}`}
+                                                    alt={articulo.titulo}
+                                                    style={{ height: '150px', objectFit: 'cover' }}
+                                                />
+                                                <Card.Body>
+                                                    <Card.Title>{articulo.titulo}</Card.Title>
+                                                    <Card.Text>
+                                                        <strong>Precio:</strong> ${articulo.precio}
+                                                    </Card.Text>
+                                                    <Card.Text>
+                                                        <strong>Estado:</strong> {articulo.estado}
+                                                    </Card.Text>
+                                                    <Button variant="warning" onClick={(e) => { e.stopPropagation(); handleEditar(articulo._id); }}>
+                                                        Editar
+                                                    </Button>
+                                                    <Button variant="danger" className="ms-2" onClick={(e) => { e.stopPropagation(); handleEliminarClick(articulo._id); }}>
+                                                        Eliminar
+                                                    </Button>
+                                                </Card.Body>
+                                            </Card>
+                                        </Link>
                                     </Col>
                                 ))
                             ) : (

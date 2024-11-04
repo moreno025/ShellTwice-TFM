@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users.models');
+const { isValidObjectId } = require('mongoose');
 const Articulo = require('../models/articulo.models.js');
 
 const secretKey = process.env.SECRET_KEY;
@@ -122,6 +123,44 @@ exports.getInfoUser = async (req, res) => {
         res.json(user);
     }catch(error){
         console.error('Error al obtener la información del usuario:', error);
+    }
+};
+
+// Ruta para actualizar un usuario (solo user verificado y admin)
+exports.actualizarUsuario = async (req, res) => {
+    try {
+        const usuarioAutenticado = req.user;
+        const userId = usuarioAutenticado._id;
+        const esAdmin = usuarioAutenticado.rol === 1;
+
+        if (!isValidObjectId(userId)) {
+            return res.status(400).json({ message: 'ID de usuario no válido' });
+        }
+
+        const usuario = await User.findById(userId);
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        if (usuario._id.toString() !== userId.toString() && !esAdmin) {
+            return res.status(403).json({ message: 'No tienes permisos para editar este usuario' });
+        }
+
+        const camposActualizables = ['username', 'name', 'email', 'estado'];
+        const updates = {};
+
+        for (const campo of camposActualizables) {
+            if (req.body[campo] !== undefined) {
+                updates[campo] = req.body[campo];
+            }
+        }
+        updates.updatedAt = Date.now();
+        const usuarioActualizado = await User.findByIdAndUpdate(userId, updates, { new: true });
+
+        res.status(200).json({ message: 'Usuario actualizado exitosamente', usuario: usuarioActualizado });
+    } catch (error) {
+        console.error('Error al actualizar el usuario:', error.message);
+        return res.status(500).json({ message: 'Error del servidor, inténtalo nuevamente' });
     }
 };
 
