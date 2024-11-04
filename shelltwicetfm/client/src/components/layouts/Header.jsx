@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import style from '../../styles/Header.module.css';
 import logo from '../../assets/logoEditado.png';
 import profilePic from '../../assets/fotoPerfil.jpg';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Offcanvas } from 'react-bootstrap';
 import CrearAnuncio from '../Forms/CrearAnuncio';
 
 const Header = () => {
@@ -43,7 +43,7 @@ const Header = () => {
 
     const handleSearch = async (event) => {
         event.preventDefault();
-    
+
         if (searchQuery.trim() !== '') {
             try {
                 const response = await fetch(`http://localhost:3001/articulo/buscar?query=${encodeURIComponent(searchQuery)}`);
@@ -66,7 +66,13 @@ const Header = () => {
                         <img src={logo} alt="Logo" width="150" height="50" className={`d-inline-block align-text-top`} />
                     </a>
 
-                    <button className={`navbar-toggler`} type="button" onClick={toggleSidebar} aria-controls="offcanvasRight" aria-expanded={showSidebar} aria-label="Toggle navigation">
+                    <button
+                        className={`navbar-toggler`}
+                        type="button"
+                        onClick={() => setShowSidebar(true)}
+                        aria-controls="offcanvasRight"
+                        aria-label="Toggle navigation"
+                    >
                         <span className={`navbar-toggler-icon`}></span>
                     </button>
 
@@ -107,6 +113,52 @@ const Header = () => {
                     </div>
                 </div>
             </nav>
+
+            {/* Offcanvas para menú en dispositivos móviles */}
+            <Offcanvas show={showSidebar} onHide={() => setShowSidebar(false)} placement="end">
+                <Offcanvas.Header closeButton>
+                    <Offcanvas.Title>Menú</Offcanvas.Title>
+                </Offcanvas.Header>
+                <Offcanvas.Body>
+                    {/* Input de búsqueda en el Offcanvas */}
+                    <form role="search" onSubmit={handleSearch} className={`mb-3`}>
+                        <input
+                            className={`form-control mb-2 ${style.input_search}`}
+                            type="search"
+                            placeholder="Busca cualquier producto"
+                            aria-label="Search"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <button className={`btn btn-outline-success w-100 ${style.boton_search}`} type="submit">
+                            <i className={`bi bi-search`}></i> Buscar
+                        </button>
+                    </form>
+
+                    {isAuthenticated ? (
+                        <div className={`d-flex flex-column`}>
+                            <img
+                                src={profilePic}
+                                alt="Perfil"
+                                className={`rounded-circle mb-3 ${style.profile_pic}`}
+                                style={{ width: '50px', height: '50px' }}
+                            />
+                            <span onClick={handleProfileRedirect} style={{ cursor: 'pointer' }}>Mi Perfil</span>
+                            <button type="button" className={`btn btn-outline-success mt-3`} onClick={handleVenderClick}>
+                                <i className={`bi bi-plus-circle`}></i> Vende
+                            </button>
+                            <button type="button" className={`btn btn-outline-danger mt-3`} onClick={handleLogout}>Cerrar Sesión</button>
+                        </div>
+                    ) : (
+                        <div className={`d-flex flex-column`}>
+                            <button type="button" className={`btn btn-outline-success mb-2`} onClick={handleLoginRedirect}>Regístrate/Inicia Sesión</button>
+                            <button type="button" className={`btn btn-outline-success`} onClick={handleVenderClick}>
+                                <i className={`bi bi-plus-circle`}></i> Vende
+                            </button>
+                        </div>
+                    )}
+                </Offcanvas.Body>
+            </Offcanvas>
 
             {/* Modal de Crear Anuncio */}
             <CrearAnuncio show={showModal} onClose={handleCloseModal} />
