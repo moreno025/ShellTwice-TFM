@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import Header from '../components/layouts/Header';
 import Footer from '../components/layouts/Footer';
 import styles from '../styles/Profile.module.css';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
     const { userId } = useAuth();
@@ -32,6 +33,10 @@ const Profile = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [estado, setEstado] = useState('');
+
+    // Estados para las valoraciones del usuario
+    const [valoraciones, setValoraciones] = useState([]); 
+    const [mediaValoracion, setMediaValoracion] = useState(null);
 
 
     useEffect(() => {
@@ -106,6 +111,46 @@ const Profile = () => {
                 console.error('Error en la petición de obtener información del usuario:', error);
             }
         };
+
+        const fetchValoraciones = async () => {
+            try {
+                const response = await fetch(`http://localhost:3001/valoracion`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+        
+                if (response.ok) {
+                    const data = await response.json();
+                    setValoraciones(data);
+                } else {
+                    console.error('Error al obtener valoraciones:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+            }
+        };
+
+        const fetchMediaValoracion = async () => {
+            try {
+                const response = await fetch(`http://localhost:3001/valoracion/media`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+        
+                if (response.ok) {
+                    const data = await response.json();
+                    setMediaValoracion(data.media);
+                } else {
+                    console.error('Error al obtener la media de valoración:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+            }
+        };
     
 
         if (userId) {
@@ -113,6 +158,8 @@ const Profile = () => {
             obtenerArticulosVendidos();
             obtenerCategorias();
             obtenerInfoUsuario();
+            fetchMediaValoracion();
+            fetchValoraciones();
         }
     }, [userId]);
 
@@ -282,21 +329,23 @@ const Profile = () => {
                             {favoritos.length > 0 ? (
                                 favoritos.map((favorito) => (
                                     <Col key={`favorito-${favorito._id}`} xs={12} sm={6} md={4} className="mb-4">
-                                        <Card>
-                                            <Card.Img
-                                                variant="top"
-                                                src={`http://localhost:3001${favorito.imagen}`}
-                                                alt={favorito.titulo}
-                                                style={{ height: '150px', objectFit: 'cover' }}
-                                            />
-                                            <Card.Body>
-                                                <Card.Title>{favorito.titulo}</Card.Title>
-                                                <Card.Text>
-                                                    <strong>Precio:</strong> ${favorito.precio}
-                                                </Card.Text>
-                                                <Button className = {styles.boton_detalles} variant="primary">Ver detalles</Button>
-                                            </Card.Body>
-                                        </Card>
+                                        <Link to={`/articulo/${favorito._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <Card>
+                                                <Card.Img
+                                                    variant="top"
+                                                    src={`http://localhost:3001${favorito.imagen}`}
+                                                    alt={favorito.titulo}
+                                                    style={{ height: '150px', objectFit: 'cover' }}
+                                                />
+                                                <Card.Body>
+                                                    <Card.Title>{favorito.titulo}</Card.Title>
+                                                    <Card.Text>
+                                                        <strong>Precio:</strong> ${favorito.precio}
+                                                    </Card.Text>
+                                                    <Button className={styles.boton_detalles} variant="primary">Ver detalles</Button>
+                                                </Card.Body>
+                                            </Card>
+                                        </Link>
                                     </Col>
                                 ))
                             ) : (
@@ -310,36 +359,31 @@ const Profile = () => {
                             {articulosVendidos.length > 0 ? (
                                 articulosVendidos.map((articulo) => (
                                     <Col key={`articulo-${articulo._id}`} xs={12} sm={6} md={4} className="mb-4">
-                                        <Card>
-                                            <Card.Img
-                                                variant="top"
-                                                src={`http://localhost:3001${articulo.imagen}`}
-                                                alt={articulo.titulo}
-                                                style={{ height: '150px', objectFit: 'cover' }}
-                                            />
-                                            <Card.Body>
-                                                <Card.Title>{articulo.titulo}</Card.Title>
-                                                <Card.Text>
-                                                    <strong>Precio:</strong> ${articulo.precio}
-                                                </Card.Text>
-                                                <Card.Text>
-                                                    <strong>Estado:</strong> {articulo.estado}
-                                                </Card.Text>
-                                                <Button
-                                                    variant="warning"
-                                                    onClick={() => handleEditar(articulo._id)}
-                                                >
-                                                    Editar
-                                                </Button>
-                                                <Button
-                                                    variant="danger"
-                                                    className="ms-2"
-                                                    onClick={() => handleEliminarClick(articulo._id)}
-                                                >
-                                                    Eliminar
-                                                </Button>
-                                            </Card.Body>
-                                        </Card>
+                                        <Link to={`/articulo/${articulo._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <Card>
+                                                <Card.Img
+                                                    variant="top"
+                                                    src={`http://localhost:3001${articulo.imagen}`}
+                                                    alt={articulo.titulo}
+                                                    style={{ height: '150px', objectFit: 'cover' }}
+                                                />
+                                                <Card.Body>
+                                                    <Card.Title>{articulo.titulo}</Card.Title>
+                                                    <Card.Text>
+                                                        <strong>Precio:</strong> ${articulo.precio}
+                                                    </Card.Text>
+                                                    <Card.Text>
+                                                        <strong>Estado:</strong> {articulo.estado}
+                                                    </Card.Text>
+                                                    <Button variant="warning" onClick={(e) => { e.stopPropagation(); handleEditar(articulo._id); }}>
+                                                        Editar
+                                                    </Button>
+                                                    <Button variant="danger" className="ms-2" onClick={(e) => { e.stopPropagation(); handleEliminarClick(articulo._id); }}>
+                                                        Eliminar
+                                                    </Button>
+                                                </Card.Body>
+                                            </Card>
+                                        </Link>
                                     </Col>
                                 ))
                             ) : (
@@ -347,7 +391,6 @@ const Profile = () => {
                             )}
                         </Row>
                     </Tab>
-
                     <Tab eventKey="perfil" title="Mis Datos">
                         {isEditing ? (
                             <Form onSubmit={handleProfileSubmit}>
@@ -457,6 +500,40 @@ const Profile = () => {
                         <Button onClick={() => setIsEditing(!isEditing)} className={styles.boton_detalles}>
                             {isEditing ? 'Cancelar' : 'Editar perfil'}
                         </Button>
+                    </Tab>
+                    <Tab eventKey="valoraciones" title="Mi Valoración">
+                        <Row>
+                            <h5>Valoración media</h5>
+                            {mediaValoracion !== null ? (
+                                <p>Tu nota es de: {mediaValoracion.toFixed(1)} ★</p>
+                            ) : (
+                                <p>Cargando media de valoración...</p>
+                            )}
+                            {valoraciones.length > 0 ? (
+                                valoraciones.map((valoracion) => (
+                                    <Col key={`valoracion-${valoracion._id}`} xs={12} sm={6} md={4} className="mb-4">
+                                        <Card>
+                                            <Card.Body>
+                                                <Card.Title>Valorado por: {valoracion.valorado_por.username}</Card.Title>
+                                                <Card.Text>
+                                                    <strong>Calificación:</strong> {valoracion.calificacion} ★
+                                                </Card.Text>
+                                                {valoracion.comentario && (
+                                                    <Card.Text>
+                                                        <strong>Comentario:</strong> {valoracion.comentario}
+                                                    </Card.Text>
+                                                )}
+                                                <Card.Text>
+                                                    <small>Fecha: {new Date(valoracion.createdAt).toLocaleDateString()}</small>
+                                                </Card.Text>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                ))
+                            ) : (
+                                <p>No tienes valoraciones recibidas.</p>
+                            )}
+                        </Row>
                     </Tab>
                 </Tabs>
             </div>

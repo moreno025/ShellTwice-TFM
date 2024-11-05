@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Header from '../components/layouts/Header';
 import Footer from '../components/layouts/Footer';
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
-import Modal from 'react-bootstrap/Modal';
-import Toast from 'react-bootstrap/Toast';
+import { Tab, Tabs, Row, Col, Card, Modal, Toast, ToastContainer, Breadcrumb } from 'react-bootstrap';
 //import SidebarCarrito from '../components/SidebarCarrito';
 import { useAuth } from '../contexts/AuthContext';
 import style from '../styles/ArticuloDetails.module.css';
@@ -17,7 +15,14 @@ const ArticuloDetails = () => {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [actionType, setActionType] = useState('');
-    const { isAuthenticated } = useAuth();
+    const [comentarios, setComentarios] = useState([]);
+    const [nuevoComentario, setNuevoComentario] = useState("");
+    const { isAuthenticated, userId } = useAuth();
+    const [calificacion, setCalificacion] = useState(1);
+    const [comentarioValoracion, setcomentarioValoracion] = useState("");
+
+    const comentarioInputRef = useRef(null);
+    const comentariosContainerRef = useRef(null);
 
     useEffect(() => {
         const fetchArticulo = async () => {
@@ -25,6 +30,7 @@ const ArticuloDetails = () => {
                 const response = await fetch(`http://localhost:3001/articulo/${id}`);
                 const data = await response.json();
                 setArticulo(data);
+                setComentarios(data.comentarios.reverse());
                 if (isAuthenticated) {
                     const favResponse = await fetch(`http://localhost:3001/users/favoritos`, {
                         headers: {
@@ -89,7 +95,80 @@ const ArticuloDetails = () => {
         setToastMessage('Artículo añadido al carrito');
         setShowToast(true);
         setTimeout(() => setShowToast(false), 2000);
-    }; 
+    };
+
+    const handleAgregarComentario = async () => {
+        if (!nuevoComentario) return;
+    
+        try {
+            const response = await fetch(`http://localhost:3001/articulo/${id}/comentario`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: JSON.stringify({
+                    usuarioId: userId,
+                    texto: nuevoComentario,
+                }),
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+
+                const nuevoComentarioObj = data;
+                if (nuevoComentarioObj && Array.isArray(comentarios)) {
+                    setComentarios([nuevoComentarioObj, ...comentarios]);
+                    setNuevoComentario("");
+                    comentarioInputRef.current?.focus();
+
+                    if (comentariosContainerRef.current) {
+                        comentariosContainerRef.current.scrollTop = 0;
+                    }
+                } else {
+                    console.error("La estructura de datos no es la esperada:", data);
+                }
+            } else {
+                console.error('Error al añadir comentario');
+            }
+        } catch (error) {
+            console.error('Error al enviar el comentario:', error);
+        }
+    };
+
+    // Función para añadir valoración
+    const handleAgregarValoracion = async () => {
+        if (!isAuthenticated) {
+            setActionType('valoracion');
+            setShowModal(true);
+            return;
+        }
+        try {
+            const response = await fetch(`http://localhost:3001/valoracion/usuario`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: JSON.stringify({
+                    usuarioId: articulo.usuario_id,
+                    valoradoPor: userId,
+                    calificacion: calificacion,
+                    comentario: comentarioValoracion
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setCalificacion(1);
+                setcomentarioValoracion("");
+            } else {
+                console.error('Error al añadir valoración:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error al enviar la valoración:', error);
+        }
+    };
 
     if (!articulo) return <p>Cargando...</p>;
 
@@ -151,12 +230,94 @@ const ArticuloDetails = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Formulario para añadir un comentario */}
+                        <Tabs defaultActiveKey="comentarios" className="mb-3 mt-5">
+                            <Tab eventKey="comentarios" title="Comentarios">
+                                <div className={`pt-3 p-2 mt-3`} style={{ maxWidth: '800px', backgroundColor: 'white', borderRadius: '10px'}}>
+                                    {isAuthenticated && (
+                                        <div className="input-group mb-3">
+                                            <input
+                                                ref={comentarioInputRef}
+                                                value={nuevoComentario}
+                                                onChange={(e) => setNuevoComentario(e.target.value)}
+                                                className="form-control"
+                                                placeholder="Escribe un comentario..."
+                                                rows="3"
+                                            />
+                                            <button type="submit" className={`btn btn-primary ${style.boton_comentario}`} onClick={handleAgregarComentario}>
+                                                <i className="bi bi-send"></i>
+                                            </button>
+                                        </div>
+                                    )}
+                                    {!isAuthenticated && (
+                                        <div className="input-group mb-3">
+                                            <input
+                                                className="form-control"
+                                                placeholder="Inicia sesión para agregar comentarios."
+                                                rows="3"
+                                            />
+                                            <button type="submit" className={`btn btn-primary ${style.boton_comentario}`} disabled>
+                                                <i className="bi bi-send"></i>
+                                            </button>
+                                        </div>
+                                    )}
+                                    {/* Sección de comentarios */}
+                                    <div ref={comentariosContainerRef} className="mb-3 mt-4" style={{ maxWidth: '800px', maxHeight: '400px', overflowY: 'auto' }}>
+                                        {comentarios.map((comentario, index) => (
+                                            <div key={index} className="mb-2 p-2 border rounded">
+                                                <strong>
+                                                    {comentario.usuario && comentario.usuario.username 
+                                                        ? comentario.usuario.username 
+                                                        : 'Unknown'}
+                                                    :
+                                                </strong>
+                                                {comentario.texto}
+                                                <div className="text-muted" style={{ fontSize: '0.8rem' }}>
+                                                    {new Date(comentario.fecha).toLocaleString()}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </Tab>
+                            <Tab eventKey="valoracion" title="Valoración">
+                                <h5>Valora este usuario</h5>
+                                <div className="d-flex">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <span
+                                            key={star}
+                                            onClick={() => setCalificacion(star)}
+                                            style={{
+                                                cursor: 'pointer',
+                                                color: star <= calificacion ? 'gold' : 'gray',
+                                                fontSize: '24px',
+                                            }}
+                                        >
+                                            ★
+                                        </span>
+                                    ))}
+                                </div>
+                                {/* Campo para el comentario */}
+                                <textarea
+                                    value={comentarioValoracion}
+                                    onChange={(e) => setcomentarioValoracion(e.target.value)}
+                                    placeholder="Deja un comentario (opcional)"
+                                    rows="3"
+                                    className="form-control my-2"
+                                />
+                                {/* Botón para enviar la valoración */}
+                                <button className="btn btn-primary" onClick={handleAgregarValoracion}>
+                                    Enviar
+                                </button>
+                            </Tab>
+                        </Tabs>
                     </div>
                     {/*<div className={`col-4 col-md-4`}>
                     <SidebarCarrito titulo={articulo.titulo} precio={articulo.precio} />
                     </div>*/}
+                    </div>
                 </div>
-            </div>
 
             {/* Modal para usuarios no autenticados */}
             <Modal show={showModal} onHide={() => setShowModal(false)}>

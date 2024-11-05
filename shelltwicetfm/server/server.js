@@ -14,6 +14,7 @@ const path = require('path');
 const usersRoutes = require('./routes/users.routes.js');
 const articuloRoutes = require('./routes/articulo.routes.js');
 const categoriaRoutes = require('./routes/categoria.routes.js');
+const valoracionRoutes = require('./routes/valoracion.routes.js');
 
 const port = process.env.port || 3001;
 dotenv.config();
@@ -37,6 +38,7 @@ conectarDb();
 app.use('/users', usersRoutes);
 app.use('/categoria', categoriaRoutes);
 app.use('/articulo', articuloRoutes);
+app.use('/valoracion', valoracionRoutes);
 
 // Conexion server
 app.listen(port, () => {

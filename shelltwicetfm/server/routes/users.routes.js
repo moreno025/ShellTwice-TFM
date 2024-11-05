@@ -7,6 +7,7 @@ router.post('/signup', usersController.signup);
 router.post('/login', usersController.login);
 router.get('/me', verifyToken, usersController.getInfoUser);
 router.get('/favoritos', verifyToken, usersController.getFavoritos);
+router.put('/actualizarUsuario/:id', verifyToken, usersController.actualizarUsuario);
 router.post('/favoritos/:articuloId', verifyToken, usersController.toggleFavorito);
 
 module.exports = router;

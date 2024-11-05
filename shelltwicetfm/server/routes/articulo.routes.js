@@ -10,5 +10,6 @@ router.put('/actualizarArticulo/:articuloId', verifyToken, articuloController.ac
 router.get('/usuario/:id', articuloController.getArticulosPorUsuario);
 router.get('/:id', articuloController.getArticulo);
 router.delete('/borrarArticulo/:articuloId', verifyToken, articuloController.eliminarArticulo);
+router.post('/:id/comentario', verifyToken, articuloController.anadircomentario);
 
 module.exports = router;
