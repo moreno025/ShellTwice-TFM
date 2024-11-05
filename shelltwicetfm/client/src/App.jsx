@@ -7,6 +7,9 @@ import ArticuloDetails from './pages/ArticuloDetails';
 import Resultados from './pages/Resultados';
 import Profile from './pages/Profile';
 import GestionAdmin from './pages/GestionAdmin';
+import GestionClientes from './pages/GestionClientes';
+import GestionArticulos from './pages/GestionArticulos';
+import GestionCategorias from './pages/GestionCategorias';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 
@@ -15,13 +18,12 @@ const AdminRoute = ({ children }) => {
     const { rol } = useAuth();
     console.log('el rol vale: ', rol);
 
-    if (rol === null || rol.isNaN) {
+    if (rol === null || isNaN(rol)) {
         return null;
     }
 
     return rol === 0 ? children : <Navigate to="/" />;
 };
-
 
 function App() {
     return (
@@ -35,7 +37,12 @@ function App() {
 					<Route path="/articulo/:id" element={<ArticuloDetails />} />
 					<Route path="/resultados" element={<Resultados />} />
 					<Route path="/profile" element={<Profile />} />
-					<Route path="/admin" element={<AdminRoute><GestionAdmin /></AdminRoute>} />
+					{/* Rutas de administración */}
+					<Route path="/admin" element={<AdminRoute><GestionAdmin /></AdminRoute>}>
+						<Route path="Clientes" element={<GestionClientes />} />
+						<Route path="Categorias" element={<GestionCategorias />} />
+						<Route path="Articulos" element={<GestionArticulos />} />
+            </Route>
 				</Routes>
 			</BrowserRouter>
 		</>
