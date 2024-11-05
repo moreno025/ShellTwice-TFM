@@ -30,9 +30,8 @@ const SignUpForm = () => {
             const response = await axios.post('http://localhost:3001/users/signup', formData);
 
             if (response.status === 200) {
-                const { token } = response.data;
-                localStorage.setItem('token', token);
-                login(token);
+                const { token, userId } = response.data;
+                login(token, userId);
 
                 setFormData({
                     name: '',
@@ -41,7 +40,7 @@ const SignUpForm = () => {
                     password: '',
                 });
 
-                navigate('/');
+                navigate('/login');
                 
             } else {
                 setError(error.response?.data?.message || 'Error desconocido');
