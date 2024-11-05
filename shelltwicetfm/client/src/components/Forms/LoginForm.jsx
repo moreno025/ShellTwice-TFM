@@ -32,10 +32,18 @@ const LoginForm = () => {
             });
 
             if (response.status === 200) {
-                const { token, userId } = response.data;
-                login(token, userId);
+                const { token, userId, rol } = response.data;
+                login(token, userId, rol);
 
-                window.location.href = '/';
+                localStorage.setItem('token', token);
+                localStorage.setItem('userId', userId);
+                localStorage.setItem('rol', rol);
+
+                if (rol === 0) {
+                    window.location.href = '/admin';
+                } else {
+                    window.location.href = '/';
+                }
             } else {
                 showModalMessage('Error al iniciar sesión');
             }
