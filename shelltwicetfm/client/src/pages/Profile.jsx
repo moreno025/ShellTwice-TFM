@@ -34,6 +34,10 @@ const Profile = () => {
     const [email, setEmail] = useState('');
     const [estado, setEstado] = useState('');
 
+    // Estados para las valoraciones del usuario
+    const [valoraciones, setValoraciones] = useState([]); 
+    const [mediaValoracion, setMediaValoracion] = useState(null);
+
 
     useEffect(() => {
         const obtenerFavoritos = async () => {
@@ -107,6 +111,46 @@ const Profile = () => {
                 console.error('Error en la petición de obtener información del usuario:', error);
             }
         };
+
+        const fetchValoraciones = async () => {
+            try {
+                const response = await fetch(`http://localhost:3001/valoracion`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+        
+                if (response.ok) {
+                    const data = await response.json();
+                    setValoraciones(data);
+                } else {
+                    console.error('Error al obtener valoraciones:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+            }
+        };
+
+        const fetchMediaValoracion = async () => {
+            try {
+                const response = await fetch(`http://localhost:3001/valoracion/media`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+        
+                if (response.ok) {
+                    const data = await response.json();
+                    setMediaValoracion(data.media);
+                } else {
+                    console.error('Error al obtener la media de valoración:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+            }
+        };
     
 
         if (userId) {
@@ -114,6 +158,8 @@ const Profile = () => {
             obtenerArticulosVendidos();
             obtenerCategorias();
             obtenerInfoUsuario();
+            fetchMediaValoracion();
+            fetchValoraciones();
         }
     }, [userId]);
 
@@ -345,7 +391,6 @@ const Profile = () => {
                             )}
                         </Row>
                     </Tab>
-
                     <Tab eventKey="perfil" title="Mis Datos">
                         {isEditing ? (
                             <Form onSubmit={handleProfileSubmit}>
@@ -455,6 +500,40 @@ const Profile = () => {
                         <Button onClick={() => setIsEditing(!isEditing)} className={styles.boton_detalles}>
                             {isEditing ? 'Cancelar' : 'Editar perfil'}
                         </Button>
+                    </Tab>
+                    <Tab eventKey="valoraciones" title="Mi Valoración">
+                        <Row>
+                            <h5>Valoración media</h5>
+                            {mediaValoracion !== null ? (
+                                <p>Tu nota es de: {mediaValoracion.toFixed(1)} ★</p>
+                            ) : (
+                                <p>Cargando media de valoración...</p>
+                            )}
+                            {valoraciones.length > 0 ? (
+                                valoraciones.map((valoracion) => (
+                                    <Col key={`valoracion-${valoracion._id}`} xs={12} sm={6} md={4} className="mb-4">
+                                        <Card>
+                                            <Card.Body>
+                                                <Card.Title>Valorado por: {valoracion.valorado_por.username}</Card.Title>
+                                                <Card.Text>
+                                                    <strong>Calificación:</strong> {valoracion.calificacion} ★
+                                                </Card.Text>
+                                                {valoracion.comentario && (
+                                                    <Card.Text>
+                                                        <strong>Comentario:</strong> {valoracion.comentario}
+                                                    </Card.Text>
+                                                )}
+                                                <Card.Text>
+                                                    <small>Fecha: {new Date(valoracion.createdAt).toLocaleDateString()}</small>
+                                                </Card.Text>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                ))
+                            ) : (
+                                <p>No tienes valoraciones recibidas.</p>
+                            )}
+                        </Row>
                     </Tab>
                 </Tabs>
             </div>
