@@ -202,7 +202,7 @@ const ArticuloDetails = () => {
                             {isAuthenticated && (
                                 <div className="input-group mb-3">
                                     <input
-                                        ref={comentarioInputRef} // Referencia al campo de entrada
+                                        ref={comentarioInputRef}
                                         value={nuevoComentario}
                                         onChange={(e) => setNuevoComentario(e.target.value)}
                                         className="form-control"
@@ -215,7 +215,16 @@ const ArticuloDetails = () => {
                                 </div>
                             )}
                             {!isAuthenticated && (
-                                <p className="text-muted">Inicia sesión para agregar comentarios.</p>
+                                <div className="input-group mb-3">
+                                    <input
+                                        className="form-control"
+                                        placeholder="Inicia sesión para agregar comentarios."
+                                        rows="3"
+                                    />
+                                    <button type="submit" className={`btn btn-primary ${style.boton_comentario}`} disabled>
+                                        <i className="bi bi-send"></i>
+                                    </button>
+                                </div>
                             )}
 
                             {/* Aquí está la sección de comentarios */}
