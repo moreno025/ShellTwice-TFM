@@ -1,0 +1,46 @@
+    /* Sidebar */
+    .wrapper {
+        display: flex;
+        height: 100vh;
+    }
+    
+    .sidebar_wrapper {
+        width: 250px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        background-color: #343a40;
+        color: white;
+        z-index: 1000;
+    }
+    
+    .sidebar_heading {
+        background-color: #343a40;
+    }
+    
+    .lista_grupo {
+        border: none;
+    }
+    
+    .lista_grupo:hover {
+        background-color: #495057;
+        color: #f8f9fa;
+    }
+    
+    .page_content_wrapper {
+        margin-left: 250px;
+        width: 100%;
+        padding: 20px;
+    }
+    
+    /* Responsividad: Para pantallas más pequeñas */
+    @media (max-width: 767px) {
+        .sidebar_wrapper {
+        width: 200px;
+        }
+        
+        .page_content_wrapper {
+        margin-left: 0;
+        }
+    }
