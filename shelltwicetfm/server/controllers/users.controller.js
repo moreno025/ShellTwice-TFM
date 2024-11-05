@@ -35,7 +35,6 @@ exports.signup = async (req, res) => {
     }
 };
 
-
 // Login de users por email y contraseña
 exports.login = async (req, res) => {
     const { username, email, password } = req.body;
@@ -55,12 +54,13 @@ exports.login = async (req, res) => {
             return res.status(401).json({ message: 'Credenciales incorrectas' });
         }
 
-        const token = jwt.sign({ _id: user._id, username: user.username }, secretKey, { expiresIn: '1h' });
-        res.json({ token, userId: user._id, message: 'Inicio de sesión exitoso' });
+        const token = jwt.sign({ _id: user._id, username: user.username, rol: user.rol }, secretKey, { expiresIn: '1h' });
+        res.json({ token, userId: user._id, rol: user.rol, message: 'Inicio de sesión exitoso' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 
 // POST para alternar entre agregar y eliminar un artículo de favoritos
