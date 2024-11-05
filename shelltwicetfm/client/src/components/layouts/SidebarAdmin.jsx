@@ -18,7 +18,7 @@ const SidebarAdmin = () => {
                 </div>
                 <div className={`list-group list-group-flush`}>
                     <Link to="Clientes" className={`mb-4 mt-4 list-group-item list-group-item-action bg-dark text-white text-center`}>
-                        <h5 className="mb-4">Gestión Clientes</h5>
+                        <h5 className="mb-4">Gestión Usuarios</h5>
                     </Link>
                     <Link to="Categorias" className={`mb-4 list-group-item list-group-item-action bg-dark text-white text-center`}>
                         <h5 className="mb-4">Gestión Categorías</h5>
