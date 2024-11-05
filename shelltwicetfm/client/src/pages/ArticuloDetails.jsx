@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Header from '../components/layouts/Header';
 import Footer from '../components/layouts/Footer';
-import { Tab, Tabs, Row, Col, Card, Modal, Toast, ToastContainer, Breadcrumb } from 'react-bootstrap';
+import { Tab, Tabs, Modal, Toast, Breadcrumb } from 'react-bootstrap';
 //import SidebarCarrito from '../components/SidebarCarrito';
 import { useAuth } from '../contexts/AuthContext';
 import style from '../styles/ArticuloDetails.module.css';
@@ -159,6 +159,7 @@ const ArticuloDetails = () => {
             });
 
             if (response.ok) {
+                // eslint-disable-next-line no-unused-vars
                 const data = await response.json();
                 setCalificacion(1);
                 setcomentarioValoracion("");

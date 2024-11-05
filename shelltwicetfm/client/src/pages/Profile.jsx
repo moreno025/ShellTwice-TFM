@@ -359,18 +359,19 @@ const Profile = () => {
                             {articulosVendidos.length > 0 ? (
                                 articulosVendidos.map((articulo) => (
                                     <Col key={`articulo-${articulo._id}`} xs={12} sm={6} md={4} className="mb-4">
-                                        <Link to={`/articulo/${articulo._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                                             <Card>
-                                                <Card.Img
-                                                    variant="top"
-                                                    src={`http://localhost:3001${articulo.imagen}`}
-                                                    alt={articulo.titulo}
-                                                    style={{ height: '150px', objectFit: 'cover' }}
-                                                />
+                                                <Link to={`/articulo/${articulo._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                                    <Card.Img
+                                                        variant="top"
+                                                        src={`http://localhost:3001${articulo.imagen}`}
+                                                        alt={articulo.titulo}
+                                                        style={{ height: '150px', objectFit: 'cover' }}
+                                                    />
+                                                </Link>
                                                 <Card.Body>
                                                     <Card.Title>{articulo.titulo}</Card.Title>
                                                     <Card.Text>
-                                                        <strong>Precio:</strong> ${articulo.precio}
+                                                        <strong>Precio:</strong> {articulo.precio}€
                                                     </Card.Text>
                                                     <Card.Text>
                                                         <strong>Estado:</strong> {articulo.estado}
@@ -383,7 +384,6 @@ const Profile = () => {
                                                     </Button>
                                                 </Card.Body>
                                             </Card>
-                                        </Link>
                                     </Col>
                                 ))
                             ) : (
