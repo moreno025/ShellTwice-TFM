@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const comentarioSchema = new Schema({
+    usuario: { type: Schema.Types.ObjectId, ref: 'users', required: true },
+    texto: { type: String, required: true },
+    fecha: { type: Date, default: Date.now }
+});
+
 const articuloSchema = new Schema({
     imagen: { type: String, required: false },
     titulo: { type: String, required: true },
@@ -12,8 +18,8 @@ const articuloSchema = new Schema({
     updatedAt: { type: Date, default: Date.now },
     estado: { type: String, enum: ["Disponible", "No Disponible"], default: "Disponible" },
     categoria: { type: Schema.Types.ObjectId, ref: 'Categoria', required: true },
-    usuario_id: { type: Schema.Types.ObjectId, ref: 'users', required: true }
-    // array de mensajes sobre el artículo
+    usuario_id: { type: Schema.Types.ObjectId, ref: 'users', required: true },
+    comentarios: [comentarioSchema]
 });
 
 const Articulo = mongoose.model('Articulo', articuloSchema);

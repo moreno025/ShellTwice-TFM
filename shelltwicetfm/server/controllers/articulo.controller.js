@@ -169,15 +169,24 @@ exports.getArticulosPorUsuario = async (req, res) => {
 exports.getArticulo = async (req, res) => {
     try {
         const { id } = req.params;
-        const articulo = await Articulo.findById({_id: id}).populate('categoria').populate('usuario_id');
+        const articulo = await Articulo.findById(id)
+            .populate('categoria')
+            .populate('usuario_id')
+            .populate({
+                path: 'comentarios.usuario',
+                select: 'username'
+            });
+
         if (!articulo) {
             return res.status(404).json({ message: 'Artículo no encontrado' });
         }
         res.status(200).json(articulo);
     } catch (error) {
+        console.error(error); // Para depuración
         res.status(500).json({ message: error.message });
     }
 };
+
 
 exports.buscar = async (req, res) => {
     try{
@@ -203,3 +212,46 @@ exports.buscar = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// POST para añadir comentarios a un artículo
+exports.anadircomentario = async (req, res) => {
+    const { id } = req.params;
+    const { usuarioId, texto } = req.body;
+
+    try {
+        const articulo = await Articulo.findById(id);
+        if (!articulo) {
+            console.error("Artículo no encontrado");
+            return res.status(404).json({ message: 'Artículo no encontrado' });
+        }
+
+        const nuevoComentario = {
+            usuario: usuarioId,
+            texto: texto,
+            fecha: new Date(),
+        };
+        articulo.comentarios.push(nuevoComentario);
+        await articulo.save();
+
+        const usuarioEncontrado = await Users.findById(usuarioId);
+        if (!usuarioEncontrado) {
+            console.error("Usuario no encontrado");
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        const comentarioConUsuario = {
+            _id: nuevoComentario._id,
+            texto: nuevoComentario.texto,
+            fecha: nuevoComentario.fecha,
+            usuario: { _id: usuarioEncontrado._id, username: usuarioEncontrado.username }
+        };
+
+        res.status(201).json(comentarioConUsuario);
+    } catch (error) {
+        console.error("Error en el backend:", error);
+        res.status(500).json({ message: 'Error al añadir el comentario' });
+    }
+};
+
+
+

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Header from '../components/layouts/Header';
 import Footer from '../components/layouts/Footer';
@@ -17,7 +17,12 @@ const ArticuloDetails = () => {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [actionType, setActionType] = useState('');
-    const { isAuthenticated } = useAuth();
+    const [comentarios, setComentarios] = useState([]);
+    const [nuevoComentario, setNuevoComentario] = useState("");
+    const { isAuthenticated, userId } = useAuth();
+
+    const comentarioInputRef = useRef(null);
+    const comentariosContainerRef = useRef(null);
 
     useEffect(() => {
         const fetchArticulo = async () => {
@@ -25,6 +30,7 @@ const ArticuloDetails = () => {
                 const response = await fetch(`http://localhost:3001/articulo/${id}`);
                 const data = await response.json();
                 setArticulo(data);
+                setComentarios(data.comentarios.reverse());
                 if (isAuthenticated) {
                     const favResponse = await fetch(`http://localhost:3001/users/favoritos`, {
                         headers: {
@@ -89,7 +95,46 @@ const ArticuloDetails = () => {
         setToastMessage('Artículo añadido al carrito');
         setShowToast(true);
         setTimeout(() => setShowToast(false), 2000);
-    }; 
+    };
+
+    const handleAgregarComentario = async () => {
+        if (!nuevoComentario) return;
+    
+        try {
+            const response = await fetch(`http://localhost:3001/articulo/${id}/comentario`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: JSON.stringify({
+                    usuarioId: userId,
+                    texto: nuevoComentario,
+                }),
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+
+                const nuevoComentarioObj = data;
+                if (nuevoComentarioObj && Array.isArray(comentarios)) {
+                    setComentarios([nuevoComentarioObj, ...comentarios]);
+                    setNuevoComentario("");
+                    comentarioInputRef.current?.focus();
+
+                    if (comentariosContainerRef.current) {
+                        comentariosContainerRef.current.scrollTop = 0;
+                    }
+                } else {
+                    console.error("La estructura de datos no es la esperada:", data);
+                }
+            } else {
+                console.error('Error al añadir comentario');
+            }
+        } catch (error) {
+            console.error('Error al enviar el comentario:', error);
+        }
+    };
 
     if (!articulo) return <p>Cargando...</p>;
 
@@ -151,12 +196,52 @@ const ArticuloDetails = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Formulario para añadir un comentario */}
+                        <div className={`pt-3 p-2 mt-3`} style={{ maxWidth: '800px', backgroundColor: 'white', borderRadius: '10px'}}>
+                            {isAuthenticated && (
+                                <div className="input-group mb-3">
+                                    <input
+                                        ref={comentarioInputRef} // Referencia al campo de entrada
+                                        value={nuevoComentario}
+                                        onChange={(e) => setNuevoComentario(e.target.value)}
+                                        className="form-control"
+                                        placeholder="Escribe un comentario..."
+                                        rows="3"
+                                    />
+                                    <button type="submit" className={`btn btn-primary ${style.boton_comentario}`} onClick={handleAgregarComentario}>
+                                        <i className="bi bi-send"></i>
+                                    </button>
+                                </div>
+                            )}
+                            {!isAuthenticated && (
+                                <p className="text-muted">Inicia sesión para agregar comentarios.</p>
+                            )}
+
+                            {/* Aquí está la sección de comentarios */}
+                            <div ref={comentariosContainerRef} className="mb-3 mt-4" style={{ maxWidth: '800px', maxHeight: '400px', overflowY: 'auto' }}>
+                                {comentarios.map((comentario, index) => (
+                                    <div key={index} className="mb-2 p-2 border rounded">
+                                        <strong>
+                                            {comentario.usuario && comentario.usuario.username 
+                                                ? comentario.usuario.username 
+                                                : 'Unknown'}
+                                            :
+                                        </strong>
+                                        {comentario.texto}
+                                        <div className="text-muted" style={{ fontSize: '0.8rem' }}>
+                                            {new Date(comentario.fecha).toLocaleString()}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                     {/*<div className={`col-4 col-md-4`}>
                     <SidebarCarrito titulo={articulo.titulo} precio={articulo.precio} />
                     </div>*/}
+                    </div>
                 </div>
-            </div>
 
             {/* Modal para usuarios no autenticados */}
             <Modal show={showModal} onHide={() => setShowModal(false)}>
