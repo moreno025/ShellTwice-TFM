@@ -1,0 +1,17 @@
+.boton_abrir {
+    background-color: rgb(173, 223, 184) !important;
+    border-color: rgb(173, 223, 184) !important;
+    border-radius: 5px !important;
+    width: 100px;
+    margin-right: 15px;
+}
+
+.boton_abrir:hover {
+    color: aliceblue;
+}
+
+
+.boton_buscar {
+    width: 100px;
+    margin-right: 190px;
+}

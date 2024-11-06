@@ -13,18 +13,18 @@ const SidebarAdmin = () => {
                     <img 
                         src={logoEditado} 
                         alt="Logo ShellTwice" 
-                        style={{ width: '200px', margin: '8px 0' }}
+                        style={{ width: '120px', margin: '8px 0' }}
                     />
                 </div>
                 <div className={`list-group list-group-flush`}>
-                    <Link to="Clientes" className={`mb-4 mt-4 list-group-item list-group-item-action bg-dark text-white text-center`}>
-                        <h5 className="mb-4">Gestión Usuarios</h5>
+                    <Link to="/admin/Clientes" className={`mb-3 mt-3 list-group-item list-group-item-action bg-dark text-white text-center`}>
+                        <h5 className="mb-3">Gestión Usuarios</h5>
                     </Link>
-                    <Link to="Categorias" className={`mb-4 list-group-item list-group-item-action bg-dark text-white text-center`}>
-                        <h5 className="mb-4">Gestión Categorías</h5>
+                    <Link to="/admin/Categorias" className={`mb-3 list-group-item list-group-item-action bg-dark text-white text-center`}>
+                        <h5 className="mb-3">Gestión Categorías</h5>
                     </Link>
-                    <Link to="Articulos" className={`mb-4 list-group-item list-group-item-action bg-dark text-white text-center`}>
-                        <h5 className="mb-4">Gestión Artículos</h5>
+                    <Link to="/admin/Articulos" className={`mb-3 list-group-item list-group-item-action bg-dark text-white text-center`}>
+                        <h5 className="mb-3">Gestión Artículos</h5>
                     </Link>
                 </div>
             </div>

@@ -1,46 +1,38 @@
-    /* Sidebar */
-    .wrapper {
-        display: flex;
-        height: 100vh;
-    }
-    
+/* SidebarAdmin.module.css */
+
+.wrapper {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar_wrapper {
+    width: 200px;  /* Ajusta según lo que necesites */
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #343a40;
+    color: white;
+    z-index: 1000; /* Para asegurarnos que siempre esté encima */
+}
+
+.sidebar_heading {
+    background-color: #343a40;
+    padding: 20px;
+}
+
+.list-group-item {
+    border: none;
+}
+
+.list-group-item:hover {
+    background-color: #495057;
+    color: #f8f9fa;
+}
+
+/* Responsividad */
+@media (max-width: 767px) {
     .sidebar_wrapper {
-        width: 250px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        background-color: #343a40;
-        color: white;
-        z-index: 1000;
+        width: 100px;
     }
-    
-    .sidebar_heading {
-        background-color: #343a40;
-    }
-    
-    .lista_grupo {
-        border: none;
-    }
-    
-    .lista_grupo:hover {
-        background-color: #495057;
-        color: #f8f9fa;
-    }
-    
-    .page_content_wrapper {
-        margin-left: 250px;
-        width: 100%;
-        padding: 20px;
-    }
-    
-    /* Responsividad: Para pantallas más pequeñas */
-    @media (max-width: 767px) {
-        .sidebar_wrapper {
-        width: 200px;
-        }
-        
-        .page_content_wrapper {
-        margin-left: 0;
-        }
-    }
+}
