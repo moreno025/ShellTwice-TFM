@@ -1,4 +1,5 @@
 const Categoria =  require('../models/categoria.models.js');
+const Articulo = require('../models/articulo.models.js');
 const path = require('path');
 const fs = require('fs');
 
@@ -6,14 +7,24 @@ const fs = require('fs');
 exports.getCategories = async (req, res) => {
     try {
         const categorias = await Categoria.find();
+        const categoriasConAnuncios = [];
+        for (let categoria of categorias) {
+            const numArticulos = await Articulo.countDocuments({ categoria: categoria._id });
+            categoriasConAnuncios.push({
+                ...categoria.toObject(),
+                numArticulos
+            });
+        }
         if (categorias.length === 0) {
             return res.status(200).json([]);
         }
-        res.status(200).json(categorias);
+        res.status(200).json(categoriasConAnuncios);
     } catch (error) {
+        console.error("Error al obtener categorías:", error.message);
         return res.status(500).json({ message: error.message });
     }
 };
+
 
 // POST para crear una categoría (admin)
 exports.crearCategoria = async (req, res) => {
