@@ -1,0 +1,14 @@
+.main_container {
+    background-color: aqua;
+    border-radius: 20px;
+}
+
+.container_card {
+    background-color: blue;
+    border-radius: 20px;
+}
+
+.card {
+    background-color: bisque;
+    border-radius: 20px;
+}

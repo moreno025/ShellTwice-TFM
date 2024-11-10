@@ -254,8 +254,8 @@ const GestionCategorias = () => {
                                         <button
                                             className="btn btn-warning"
                                             onClick={() => {
-                                                setEditCategoria(categoria);  // Establece correctamente la categoría a editar
-                                                setShowEditModal(true);  // Muestra el modal de edición
+                                                setEditCategoria(categoria); 
+                                                setShowEditModal(true);
                                             }}
                                         >
                                             Editar

@@ -96,6 +96,25 @@ exports.eliminarArticulo = async (req, res) => {
     }
 };
 
+// GET para obtener todos los artículos
+exports.getAllArticulos = async (req, res) => {
+    try {
+        const articulos = await Articulo.find()
+            .populate('categoria') // Para obtener la categoría asociada
+            .populate('usuario_id', 'username'); // Para obtener el usuario asociado
+        
+        if (articulos.length === 0) {
+            return res.status(204).json({ message: 'No se encontraron artículos' });
+        }
+
+        return res.status(200).json(articulos);
+    } catch (error) {
+        console.error('Error al obtener los artículos:', error.message);
+        return res.status(500).json({ message: 'Error del servidor, inténtalo nuevamente' });
+    }
+};
+
+
 // PUT para editar un artículo (user verificado y admin)
 exports.actualizarArticulo = async (req, res) => {
     try {

@@ -1,5 +1,5 @@
 // GestionAdmin.jsx
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import SidebarAdmin from '../components/layouts/SidebarAdmin';
 import GestionClientes from '../pages/GestionClientes';
 import GestionCategorias from '../pages/GestionCategorias';
@@ -13,6 +13,7 @@ const GestionAdmin = () => {
             {/* Área principal donde se renderizan las rutas */}
             <div className="flex-grow-1 p-4" style={{ marginLeft: '200px' }}>
                 <Routes>
+                    <Route path="/" element={<Navigate to="/admin/Clientes" />} />
                     <Route path="Clientes" element={<GestionClientes />} />
                     <Route path="Categorias" element={<GestionCategorias />} />
                     <Route path="Articulos" element={<GestionArticulos />} />

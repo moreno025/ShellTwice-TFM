@@ -5,6 +5,8 @@ const articuloController = require('../controllers/articulo.controller');
 
 router.post('/crearArticulo', verifyToken, articuloController.crearArticulo);
 router.get('/buscar', articuloController.buscar);
+// Ruta para obtener todos los artículos
+router.get('/todos', verifyToken, articuloController.getAllArticulos);
 router.get('/categorias/:titulo', articuloController.getProductsByCategory);
 router.put('/actualizarArticulo/:articuloId', verifyToken, articuloController.actualizarArticulo);
 router.get('/usuario/:id', articuloController.getArticulosPorUsuario);
