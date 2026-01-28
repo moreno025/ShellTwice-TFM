@@ -22,7 +22,7 @@ dotenv.config();
 // Middleware cors, express y JSON
 const app = express();
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: PROCESS.ENV.BACKEND_ROUTE,
     allowedHeaders: ['Authorization', 'Content-Type'],
     credentials: true
 }));
