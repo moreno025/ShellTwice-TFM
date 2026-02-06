@@ -46,7 +46,7 @@ const Header = () => {
 
         if (searchQuery.trim() !== '') {
             try {
-                const response = await fetch(`http://localhost:3001/articulo/buscar?query=${encodeURIComponent(searchQuery)}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/articulo/buscar?query=${encodeURIComponent(searchQuery)}`);
                 if (!response.ok) {
                     throw new Error(`Error en la búsqueda: ${response.status} - ${response.statusText}`);
                 }

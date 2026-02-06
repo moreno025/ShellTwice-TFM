@@ -8,11 +8,11 @@ const GestionArticulos = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [articulosPerPage] = useState(5);
     const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState(""); 
+    const [toastMessage, setToastMessage] = useState("");
 
     const fetchArticulos = async () => {
         try {
-            const response = await fetch("http://localhost:3001/articulo/todos", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/articulo/todos`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -39,10 +39,10 @@ const GestionArticulos = () => {
     // Filtrar los artículos según los valores de estado y precio
     const filteredArticulos = articulos.filter((articulo) => {
         const matchesEstado = estadoArticuloSearch ? articulo.estado.toLowerCase().includes(estadoArticuloSearch.toLowerCase()) : true;
-        
+
         // Filtrar los artículos por precio exacto
         const matchesPrecio = precioArticuloSearch ? articulo.precio === parseFloat(precioArticuloSearch) : true;
-        
+
         return matchesEstado && matchesPrecio;
     });
 
@@ -57,18 +57,18 @@ const GestionArticulos = () => {
 
     const handleDelete = async (id) => {
         try {
-            const response = await fetch(`http://localhost:3001/articulo/borrarArticulo/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/articulo/borrarArticulo/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 }
             });
-    
+
             if (response.ok) {
                 // Si la eliminación es exitosa, muestra el toast con un mensaje de éxito
                 setToastMessage("Artículo eliminado correctamente.");
                 setShowToast(true);
-    
+
                 // Filtrar el artículo eliminado de la lista
                 setArticulos(articulos.filter(articulo => articulo._id !== id));
                 console.log("Artículo eliminado correctamente.");

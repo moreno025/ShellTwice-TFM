@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Form, Button, Modal } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from '../../styles/CrearAnuncio.module.css';
@@ -18,7 +19,7 @@ const CrearAnuncio = ({ show, onClose }) => {
     useEffect(() => {
         const obtenerCategorias = async () => {
             try {
-                const response = await fetch('http://localhost:3001/categoria/list-categorias');
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/categoria/list-categorias`);
                 const data = await response.json();
 
                 if (Array.isArray(data)) {
@@ -36,7 +37,7 @@ const CrearAnuncio = ({ show, onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!userId) {
             console.error('No se puede crear el anuncio: el userId es indefinido.');
             return;
@@ -53,7 +54,7 @@ const CrearAnuncio = ({ show, onClose }) => {
         formData.append('etiquetas', JSON.stringify(etiquetas.split(',').map(tag => tag.trim())));
 
         try {
-            const response = await fetch('http://localhost:3001/articulo/crearArticulo', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/articulo/crearArticulo`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -73,7 +74,7 @@ const CrearAnuncio = ({ show, onClose }) => {
                 setCategoriaSeleccionada('');
                 setEtiquetas('');
 
-                console.log('Anuncio creado correctamente: '+data);
+                console.log('Anuncio creado correctamente: ' + data);
             } else {
                 console.error('Error al crear el anuncio');
             }
@@ -205,6 +206,11 @@ const CrearAnuncio = ({ show, onClose }) => {
             </Modal>
         </>
     );
+};
+
+CrearAnuncio.propTypes = {
+    show: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
 };
 
 export default CrearAnuncio;

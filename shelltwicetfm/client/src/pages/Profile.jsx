@@ -35,14 +35,14 @@ const Profile = () => {
     const [estado, setEstado] = useState('');
 
     // Estados para las valoraciones del usuario
-    const [valoraciones, setValoraciones] = useState([]); 
+    const [valoraciones, setValoraciones] = useState([]);
     const [mediaValoracion, setMediaValoracion] = useState(null);
 
 
     useEffect(() => {
         const obtenerFavoritos = async () => {
             try {
-                const response = await fetch('http://localhost:3001/users/favoritos', {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/users/favoritos`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
@@ -60,7 +60,7 @@ const Profile = () => {
 
         const obtenerArticulosVendidos = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/articulo/usuario/${userId}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/articulo/usuario/${userId}`);
                 if (response.ok) {
                     if (response.status !== 204) {
                         const data = await response.json();
@@ -78,7 +78,7 @@ const Profile = () => {
 
         const obtenerCategorias = async () => {
             try {
-                const response = await fetch('http://localhost:3001/categoria/list-categorias');
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/categoria/list-categorias`);
                 if (response.ok) {
                     const data = await response.json();
                     setCategorias(data);
@@ -92,12 +92,12 @@ const Profile = () => {
 
         const obtenerInfoUsuario = async () => {
             try {
-                const response = await fetch('http://localhost:3001/users/me', {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/users/me`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
                 });
-                
+
                 if (response.ok) {
                     const userData = await response.json();
                     setUsername(userData.username || '');
@@ -114,13 +114,13 @@ const Profile = () => {
 
         const fetchValoraciones = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/valoracion`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/valoracion`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     },
                 });
-        
+
                 if (response.ok) {
                     const data = await response.json();
                     setValoraciones(data);
@@ -134,13 +134,13 @@ const Profile = () => {
 
         const fetchMediaValoracion = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/valoracion/media`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/valoracion/media`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     },
                 });
-        
+
                 if (response.ok) {
                     const data = await response.json();
                     setMediaValoracion(data.media);
@@ -151,7 +151,7 @@ const Profile = () => {
                 console.error('Error en la solicitud:', error);
             }
         };
-    
+
 
         if (userId) {
             obtenerFavoritos();
@@ -172,7 +172,7 @@ const Profile = () => {
         if (!articuloAEliminar) return;
 
         try {
-            const response = await fetch(`http://localhost:3001/articulo/borrarArticulo/${articuloAEliminar}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/articulo/borrarArticulo/${articuloAEliminar}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -196,7 +196,7 @@ const Profile = () => {
 
     const handleEditar = async (articuloId) => {
         try {
-            const response = await fetch(`http://localhost:3001/articulo/${articuloId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/articulo/${articuloId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -223,18 +223,18 @@ const Profile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         if (!articuloId) {
             console.error('No hay ID de artículo disponible para actualizar');
             return;
         }
-    
+
         const formData = new FormData();
         formData.append('titulo', titulo);
         formData.append('precio', precio);
         formData.append('descripcion', descripcion);
         formData.append('ubicacion', ubicacion);
-    
+
         if (etiquetas.length > 0) {
             etiquetas.split(',').forEach((etiqueta, index) => {
                 formData.append(`etiquetas[${index}]`, etiqueta.trim());
@@ -244,9 +244,9 @@ const Profile = () => {
         if (foto) {
             formData.append('foto', foto);
         }
-    
+
         try {
-            const response = await fetch(`http://localhost:3001/articulo/actualizarArticulo/${articuloId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/articulo/actualizarArticulo/${articuloId}`, {
                 method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -282,16 +282,16 @@ const Profile = () => {
 
     const handleProfileSubmit = async (e) => {
         e.preventDefault();
-    
+
         const updatedUserData = {
             username,
             name,
             email,
             estado,
         };
-    
+
         try {
-            const response = await fetch(`http://localhost:3001/users/actualizarUsuario/${userId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/actualizarUsuario/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -299,7 +299,7 @@ const Profile = () => {
                 },
                 body: JSON.stringify(updatedUserData),
             });
-    
+
             if (response.ok) {
                 setToastMessage('Datos actualizados exitosamente.');
                 setShowToast(true);
@@ -316,7 +316,7 @@ const Profile = () => {
             setShowToast(true);
         }
     };
-    
+
 
     return (
         <>
@@ -333,7 +333,7 @@ const Profile = () => {
                                             <Card>
                                                 <Card.Img
                                                     variant="top"
-                                                    src={`http://localhost:3001${favorito.imagen}`}
+                                                    src={`${import.meta.env.VITE_API_URL}${favorito.imagen}`}
                                                     alt={favorito.titulo}
                                                     style={{ height: '150px', objectFit: 'cover' }}
                                                 />
@@ -359,31 +359,31 @@ const Profile = () => {
                             {articulosVendidos.length > 0 ? (
                                 articulosVendidos.map((articulo) => (
                                     <Col key={`articulo-${articulo._id}`} xs={12} sm={6} md={4} className="mb-4">
-                                            <Card>
-                                                <Link to={`/articulo/${articulo._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                                    <Card.Img
-                                                        variant="top"
-                                                        src={`http://localhost:3001${articulo.imagen}`}
-                                                        alt={articulo.titulo}
-                                                        style={{ height: '150px', objectFit: 'cover' }}
-                                                    />
-                                                </Link>
-                                                <Card.Body>
-                                                    <Card.Title>{articulo.titulo}</Card.Title>
-                                                    <Card.Text>
-                                                        <strong>Precio:</strong> {articulo.precio}€
-                                                    </Card.Text>
-                                                    <Card.Text>
-                                                        <strong>Estado:</strong> {articulo.estado}
-                                                    </Card.Text>
-                                                    <Button variant="warning" onClick={(e) => { e.stopPropagation(); handleEditar(articulo._id); }}>
-                                                        Editar
-                                                    </Button>
-                                                    <Button variant="danger" className="ms-2" onClick={(e) => { e.stopPropagation(); handleEliminarClick(articulo._id); }}>
-                                                        Eliminar
-                                                    </Button>
-                                                </Card.Body>
-                                            </Card>
+                                        <Card>
+                                            <Link to={`/articulo/${articulo._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                                <Card.Img
+                                                    variant="top"
+                                                    src={`${import.meta.env.VITE_API_URL}${articulo.imagen}`}
+                                                    alt={articulo.titulo}
+                                                    style={{ height: '150px', objectFit: 'cover' }}
+                                                />
+                                            </Link>
+                                            <Card.Body>
+                                                <Card.Title>{articulo.titulo}</Card.Title>
+                                                <Card.Text>
+                                                    <strong>Precio:</strong> {articulo.precio}€
+                                                </Card.Text>
+                                                <Card.Text>
+                                                    <strong>Estado:</strong> {articulo.estado}
+                                                </Card.Text>
+                                                <Button variant="warning" onClick={(e) => { e.stopPropagation(); handleEditar(articulo._id); }}>
+                                                    Editar
+                                                </Button>
+                                                <Button variant="danger" className="ms-2" onClick={(e) => { e.stopPropagation(); handleEliminarClick(articulo._id); }}>
+                                                    Eliminar
+                                                </Button>
+                                            </Card.Body>
+                                        </Card>
                                     </Col>
                                 ))
                             ) : (
@@ -496,7 +496,7 @@ const Profile = () => {
                                 </Form.Group>
                             </Form>
                         )}
-                        
+
                         <Button onClick={() => setIsEditing(!isEditing)} className={styles.boton_detalles}>
                             {isEditing ? 'Cancelar' : 'Editar perfil'}
                         </Button>

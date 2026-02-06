@@ -22,7 +22,7 @@ const ArticulosList = () => {
     useEffect(() => {
         const fetchArticulos = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/articulo/categorias/${titulo}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/articulo/categorias/${titulo}`);
                 if (response.ok) {
                     const data = await response.json();
                     setArticulos(data);
@@ -73,7 +73,7 @@ const ArticulosList = () => {
                                 <Col key={articulo._id} xs={12} sm={6} md={4} className="mb-4">
                                     <ArticuloCard
                                         _id={articulo._id}
-                                        imagen={`http://localhost:3001${articulo.imagen}`}
+                                        imagen={`${import.meta.env.VITE_API_URL}${articulo.imagen}`}
                                         titulo={articulo.titulo}
                                         descripcion={articulo.descripcion}
                                         precio={articulo.precio}

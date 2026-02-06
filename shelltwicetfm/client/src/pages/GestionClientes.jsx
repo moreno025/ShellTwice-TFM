@@ -16,7 +16,7 @@ const GestionClientes = () => {
     // Función para obtener los usuarios
     const fetchUsuarios = async () => {
         try {
-            const response = await fetch('http://localhost:3001/users/all', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/all`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -51,7 +51,7 @@ const GestionClientes = () => {
 
     const handleDelete = async (userId) => {
         try {
-            const response = await fetch(`http://localhost:3001/users/delete/${userId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/delete/${userId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -81,7 +81,7 @@ const GestionClientes = () => {
 
     const handleChangeUserState = async (userId, newState) => {
         try {
-            const response = await fetch(`http://localhost:3001/users/cambiarEstadoUsuario/${userId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/cambiarEstadoUsuario/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,

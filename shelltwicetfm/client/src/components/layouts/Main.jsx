@@ -5,10 +5,10 @@ import CategoriaList from "../CategoriaList";
 const Main = () => {
     return (
         <>
-        <div className={style.main_container}>
-            <Carousel />
-            <CategoriaList />
-        </div>
+            <div className={style.main_container}>
+                <Carousel />
+                <CategoriaList />
+            </div>
         </>
     );
 };

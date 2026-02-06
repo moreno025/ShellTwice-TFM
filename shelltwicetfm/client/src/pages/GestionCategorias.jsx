@@ -6,10 +6,10 @@ const GestionCategorias = () => {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [editCategoria, setEditCategoria] = useState({
-    id: "",
-    titulo: "",
-    imagen: null,
-});
+        id: "",
+        titulo: "",
+        imagen: null,
+    });
 
     const [newCategoria, setNewCategoria] = useState({
         titulo: "",
@@ -23,7 +23,7 @@ const GestionCategorias = () => {
     // Función para obtener todas las categorías
     const fetchCategorias = async () => {
         try {
-            const response = await fetch("http://localhost:3001/categoria/list-categorias", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/categoria/list-categorias`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -44,12 +44,12 @@ const GestionCategorias = () => {
 
     useEffect(() => {
         fetchCategorias();
-    }, []);    
+    }, []);
 
     // Función de búsqueda
     const handleSearch = async () => {
         try {
-            const response = await fetch(`http://localhost:3001/categoria/list-categorias?titulo=${tituloCategoriaSearch}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/categoria/list-categorias?titulo=${tituloCategoriaSearch}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -89,7 +89,7 @@ const GestionCategorias = () => {
     // Función para borrar una categoría
     const handleDelete = async (titulo) => {
         try {
-            const response = await fetch(`http://localhost:3001/categoria/borrarCategoria`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/categoria/borrarCategoria`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -114,22 +114,22 @@ const GestionCategorias = () => {
     // Función para manejar el envío del formulario de creación
     const handleCreateCategoria = async (e) => {
         e.preventDefault();
-    
+
         const formData = new FormData();
         formData.append('titulo', newCategoria.titulo);
         formData.append('imagen', newCategoria.imagen);
-    
+
         try {
-            const response = await fetch("http://localhost:3001/categoria/crearCategoria", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/categoria/crearCategoria`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
                 body: formData,
             });
-    
+
             const data = await response.json();
-    
+
             if (response.ok) {
                 alert(data.message);
                 fetchCategorias();
@@ -152,24 +152,24 @@ const GestionCategorias = () => {
             alert("Error: ID no válido");
             return;
         }
-    
+
         console.log('editCategoria:', editCategoria);
-    
+
         const formData = new FormData();
         formData.append('titulo', editCategoria.titulo);
         formData.append('imagen', editCategoria.imagen);
-    
+
         try {
-            const response = await fetch(`http://localhost:3001/categoria/actualizarCategoria/${editCategoria._id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/categoria/actualizarCategoria/${editCategoria._id}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
                 body: formData,
             });
-    
+
             const data = await response.json();
-    
+
             if (response.ok) {
                 alert(data.message);
                 fetchCategorias();
@@ -183,8 +183,8 @@ const GestionCategorias = () => {
             alert("Error al editar la categoría");
         }
     };
-    
-    
+
+
 
     const handleCreateModalOpen = () => {
         setShowCreateModal(true);
@@ -254,7 +254,7 @@ const GestionCategorias = () => {
                                         <button
                                             className="btn btn-warning"
                                             onClick={() => {
-                                                setEditCategoria(categoria); 
+                                                setEditCategoria(categoria);
                                                 setShowEditModal(true);
                                             }}
                                         >
@@ -354,51 +354,51 @@ const GestionCategorias = () => {
                 </div>
 
                 {/* Modal para Editar Categoría */}
-                    <div
-                        className={`modal fade ${showEditModal ? 'show' : ''}`}
-                        tabIndex="-1"
-                        aria-labelledby="editCategoriaModal"
-                        aria-hidden={!showEditModal}
-                        style={{ display: showEditModal ? 'block' : 'none' }}
-                    >
-                        <div className="modal-dialog">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Editar Categoría</h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        onClick={() => setShowEditModal(false)}
-                                    ></button>
-                                </div>
-                                <div className="modal-body">
-                                    <form onSubmit={handleEditCategoria}>
-                                        <div className="mb-3">
-                                            <label htmlFor="tituloCategoriaEdit" className="form-label">Título</label>
-                                            <input
-                                                type="text"
-                                                id="tituloCategoriaEdit"
-                                                className="form-control"
-                                                value={editCategoria.titulo}
-                                                onChange={(e) => setEditCategoria({ ...editCategoria, titulo: e.target.value })}
-                                                required
-                                            />
-                                        </div>
-                                        <div className="mb-3">
-                                            <label htmlFor="imagenCategoriaEdit" className="form-label">Imagen</label>
-                                            <input
-                                                type="file"
-                                                id="imagenCategoriaEdit"
-                                                className="form-control"
-                                                onChange={(e) => setEditCategoria({ ...editCategoria, imagen: e.target.files[0] })}
-                                            />
-                                        </div>
-                                        <button type="submit" className="btn btn-primary">Actualizar Categoría</button>
-                                    </form>
-                                </div>
+                <div
+                    className={`modal fade ${showEditModal ? 'show' : ''}`}
+                    tabIndex="-1"
+                    aria-labelledby="editCategoriaModal"
+                    aria-hidden={!showEditModal}
+                    style={{ display: showEditModal ? 'block' : 'none' }}
+                >
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Editar Categoría</h5>
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    onClick={() => setShowEditModal(false)}
+                                ></button>
+                            </div>
+                            <div className="modal-body">
+                                <form onSubmit={handleEditCategoria}>
+                                    <div className="mb-3">
+                                        <label htmlFor="tituloCategoriaEdit" className="form-label">Título</label>
+                                        <input
+                                            type="text"
+                                            id="tituloCategoriaEdit"
+                                            className="form-control"
+                                            value={editCategoria.titulo}
+                                            onChange={(e) => setEditCategoria({ ...editCategoria, titulo: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="imagenCategoriaEdit" className="form-label">Imagen</label>
+                                        <input
+                                            type="file"
+                                            id="imagenCategoriaEdit"
+                                            className="form-control"
+                                            onChange={(e) => setEditCategoria({ ...editCategoria, imagen: e.target.files[0] })}
+                                        />
+                                    </div>
+                                    <button type="submit" className="btn btn-primary">Actualizar Categoría</button>
+                                </form>
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         </>
     );

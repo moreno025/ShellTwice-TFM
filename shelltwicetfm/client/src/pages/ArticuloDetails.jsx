@@ -27,12 +27,12 @@ const ArticuloDetails = () => {
     useEffect(() => {
         const fetchArticulo = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/articulo/${id}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/articulo/${id}`);
                 const data = await response.json();
                 setArticulo(data);
                 setComentarios(data.comentarios.reverse());
                 if (isAuthenticated) {
-                    const favResponse = await fetch(`http://localhost:3001/users/favoritos`, {
+                    const favResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/favoritos`, {
                         headers: {
                             'Authorization': `Bearer ${localStorage.getItem('token')}`
                         }
@@ -47,7 +47,7 @@ const ArticuloDetails = () => {
         };
         fetchArticulo();
     }, [id, isAuthenticated]);
-    
+
 
     const handleToggleFavorito = async () => {
         if (!isAuthenticated) {
@@ -56,19 +56,19 @@ const ArticuloDetails = () => {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:3001/users/favoritos/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/favoritos/${id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-    
+
             if (response.status === 403) {
                 setShowModal(true);
                 return;
             }
-    
+
             if (response.ok) {
                 const result = await response.json();
                 setToastMessage(result.message);
@@ -99,9 +99,9 @@ const ArticuloDetails = () => {
 
     const handleAgregarComentario = async () => {
         if (!nuevoComentario) return;
-    
+
         try {
-            const response = await fetch(`http://localhost:3001/articulo/${id}/comentario`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/articulo/${id}/comentario`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ const ArticuloDetails = () => {
                     texto: nuevoComentario,
                 }),
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
 
@@ -144,7 +144,7 @@ const ArticuloDetails = () => {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:3001/valoracion/usuario`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/valoracion/usuario`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -191,7 +191,7 @@ const ArticuloDetails = () => {
                             </Breadcrumb.Item>
                         </Breadcrumb>
                         <div className={`card`} style={{ maxWidth: '800px' }}>
-                            <img src={`http://localhost:3001${articulo.imagen}`} alt={articulo.titulo} className={`img-fluid rounded-start ${style.card_img}`} />
+                            <img src={`${import.meta.env.VITE_API_URL}${articulo.imagen}`} alt={articulo.titulo} className={`img-fluid rounded-start ${style.card_img}`} />
                             <div className={`card-body ${style.body_container}`}>
                                 <h3 className={`card-title text-center`}>{articulo.titulo}</h3>
                                 <h5><strong>Precio:</strong> {articulo.precio}€</h5>
@@ -214,8 +214,8 @@ const ArticuloDetails = () => {
                                 <i className={`bi bi-box-seam`} style={{ color: 'green' }}> Entregas de 2-3 días laborables</i><hr />
                                 <p><small className={`text-body-secondary`}>Última actualización: {new Date(articulo.updatedAt).toLocaleDateString()}</small></p><hr />
                                 <div className={`container d-flex gap-2 ${style.container_botones}`}>
-                                    <button 
-                                        type='submit' 
+                                    <button
+                                        type='submit'
                                         className={`btn ${style.boton_comprar}`}
                                         onClick={handleAddToCart}
                                     >
@@ -235,7 +235,7 @@ const ArticuloDetails = () => {
                         {/* Formulario para añadir un comentario */}
                         <Tabs defaultActiveKey="comentarios" className="mb-3 mt-5">
                             <Tab eventKey="comentarios" title="Comentarios">
-                                <div className={`pt-3 p-2 mt-3`} style={{ maxWidth: '800px', backgroundColor: 'white', borderRadius: '10px'}}>
+                                <div className={`pt-3 p-2 mt-3`} style={{ maxWidth: '800px', backgroundColor: 'white', borderRadius: '10px' }}>
                                     {isAuthenticated && (
                                         <div className="input-group mb-3">
                                             <input
@@ -268,8 +268,8 @@ const ArticuloDetails = () => {
                                         {comentarios.map((comentario, index) => (
                                             <div key={index} className="mb-2 p-2 border rounded">
                                                 <strong>
-                                                    {comentario.usuario && comentario.usuario.username 
-                                                        ? comentario.usuario.username 
+                                                    {comentario.usuario && comentario.usuario.username
+                                                        ? comentario.usuario.username
                                                         : 'Unknown'}
                                                     :
                                                 </strong>
@@ -317,8 +317,8 @@ const ArticuloDetails = () => {
                     {/*<div className={`col-4 col-md-4`}>
                     <SidebarCarrito titulo={articulo.titulo} precio={articulo.precio} />
                     </div>*/}
-                    </div>
                 </div>
+            </div>
 
             {/* Modal para usuarios no autenticados */}
             <Modal show={showModal} onHide={() => setShowModal(false)}>

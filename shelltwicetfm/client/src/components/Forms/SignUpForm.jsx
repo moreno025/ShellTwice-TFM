@@ -27,7 +27,7 @@ const SignUpForm = () => {
         setError('');
 
         try {
-            const response = await axios.post('http://localhost:3001/users/signup', formData);
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/signup`, formData);
 
             if (response.status === 200) {
                 const { token, userId } = response.data;
@@ -41,7 +41,7 @@ const SignUpForm = () => {
                 });
 
                 navigate('/login');
-                
+
             } else {
                 setError(error.response?.data?.message || 'Error desconocido');
             }
@@ -108,8 +108,8 @@ const SignUpForm = () => {
                             />
                             <label htmlFor="password">Password</label>
                         </div>
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             className={`btn btn-primary mt-3 ${styles.boton_signup}`}
                             disabled={loading}
                         >
