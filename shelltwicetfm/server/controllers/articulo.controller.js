@@ -235,9 +235,17 @@ exports.buscar = async (req, res) => {
 // POST para añadir comentarios a un artículo
 exports.anadircomentario = async (req, res) => {
     const { id } = req.params;
-    const { usuarioId, texto } = req.body;
+    const { texto } = req.body;
+    const usuarioId = req.user?._id;
 
     try {
+        if (!usuarioId) {
+            return res.status(401).json({ message: 'Usuario no autenticado' });
+        }
+        if (!texto || !texto.trim()) {
+            return res.status(400).json({ message: 'El comentario es requerido' });
+        }
+
         const articulo = await Articulo.findById(id);
         if (!articulo) {
             console.error("Artículo no encontrado");
@@ -246,22 +254,23 @@ exports.anadircomentario = async (req, res) => {
 
         const nuevoComentario = {
             usuario: usuarioId,
-            texto: texto,
+            texto: texto.trim(),
             fecha: new Date(),
         };
         articulo.comentarios.push(nuevoComentario);
         await articulo.save();
 
-        const usuarioEncontrado = await Users.findById(usuarioId);
+        const usuarioEncontrado = await Users.findById(usuarioId).select('username');
         if (!usuarioEncontrado) {
             console.error("Usuario no encontrado");
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
+        const comentarioGuardado = articulo.comentarios[articulo.comentarios.length - 1];
         const comentarioConUsuario = {
-            _id: nuevoComentario._id,
-            texto: nuevoComentario.texto,
-            fecha: nuevoComentario.fecha,
+            _id: comentarioGuardado._id,
+            texto: comentarioGuardado.texto,
+            fecha: comentarioGuardado.fecha,
             usuario: { _id: usuarioEncontrado._id, username: usuarioEncontrado.username }
         };
 
@@ -271,6 +280,8 @@ exports.anadircomentario = async (req, res) => {
         res.status(500).json({ message: 'Error al añadir el comentario' });
     }
 };
+
+
 
 
 

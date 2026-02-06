@@ -30,7 +30,10 @@ const ArticuloDetails = () => {
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/articulo/${id}`);
                 const data = await response.json();
                 setArticulo(data);
-                setComentarios(data.comentarios.reverse());
+                const comentariosLista = Array.isArray(data.comentarios)
+                    ? [...data.comentarios].reverse()
+                    : [];
+                setComentarios(comentariosLista);
                 if (isAuthenticated) {
                     const favResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/favoritos`, {
                         headers: {
@@ -115,10 +118,8 @@ const ArticuloDetails = () => {
 
             if (response.ok) {
                 const data = await response.json();
-
-                const nuevoComentarioObj = data;
-                if (nuevoComentarioObj && Array.isArray(comentarios)) {
-                    setComentarios([nuevoComentarioObj, ...comentarios]);
+                if (data) {
+                    setComentarios(prev => [data, ...(Array.isArray(prev) ? prev : [])]);
                     setNuevoComentario("");
                     comentarioInputRef.current?.focus();
 
@@ -129,7 +130,8 @@ const ArticuloDetails = () => {
                     console.error("La estructura de datos no es la esperada:", data);
                 }
             } else {
-                console.error('Error al añadir comentario');
+                const errorText = await response.text();
+                console.error('Error al añadir comentario:', response.status, errorText);
             }
         } catch (error) {
             console.error('Error al enviar el comentario:', error);
@@ -353,3 +355,4 @@ const ArticuloDetails = () => {
 };
 
 export default ArticuloDetails;
+
